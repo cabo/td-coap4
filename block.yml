@@ -1,0 +1,601 @@
+---
+TD_COAP_BLOCK_01:
+  obj: Handle GET blockwise transfer for large resource (early negotiation)
+  cfg: CoAP_CFG_BASIC
+  ref: "[BLOCK] 2.2–2.4"
+  pre:
+  - Client supports Block2 transfers
+  - Server supports Block2 transfers
+  - Server offers a large resource /large
+  - Client knows /large requires block transfer
+  seq:
+  - s: Client is requested to retrieve resource /large
+  - c:
+    - 'Client sends a GET request. The request contains a Block2 option
+      indicating:'
+    - - NUM = 0;
+      - M = 0;
+      - &DES SZX (➔DES_SZX) is the desired block size.
+  - c:
+    - 'Server sends 2.05 (Content) response with a Block2 option indicating:'
+    - - NUM = 0;
+      - M = 1;
+      - &ACT_LESS SZX (➔ACT_SZX) is less than or equal to DES_SZX.
+    - &FULL Payload size is 2**(SZX+4) bytes.
+  - n: Start of loop
+  - c:
+    - 'Client send GET requests for further blocks indicating:'
+    - - NUM = i where “i” is the block number of the current block;
+      - M = 0;
+      - &ACT SZX is ACT_SZX.
+  - c:
+    - 'Server sends 2.05 (Content) response containing Block2 option indicating:'
+    - - NUM = i where “i” is the block number used at step 4;
+      - M = 1;
+      - *ACT
+    - *FULL
+  - n: 'end of loop; final slice:'
+  - c:
+    - 'Client send GET request for the last block indicating:'
+    - - NUM = n where “n” is the last block number;
+      - M = 0;
+      - *ACT
+  - c:
+    - 'Server sends 2.05 (Content) response with a Block2 option indicating:'
+    - - NUM = n where “n” is the block number used at step 6;
+      - M = 0;
+      - *ACT
+    - &RUNT Payload size is less than or equal to 2**(SZX+4) bytes.
+  - v: Client displays the received information (no gaps, right order)
+  not: Steps 4 and 5 are in a loop.
+
+TD_COAP_BLOCK_02:
+  obj: Handle GET blockwise transfer for large resource (late negotiation)
+  cfg: CoAP_CFG_BASIC
+  ref: "[BLOCK] 2.2–2.4"
+  pre:
+  - Client supports Block2 transfers
+  - Server supports Block2 transfers
+  - Server offers a large resource /large
+  - Client does not know /large requires block transfer
+  seq:
+  - s: Client is requested to retrieve resource /large
+  - c: Client sends a GET request not containing a Block2 option
+  - c:
+    - 'Server sends 2.05 (Content) response with a Block2 option indicating:'
+    - - NUM = 0;
+      - M = 1;
+      - *DES
+    - *FULL
+  - c:
+    - 'Client switches to blockwise transfer mode and sends a GET request with a Block2
+      option indicating:'
+    - - NUM is the next block number k = (2**(DES_SZX – ACT_SZX));
+      - M = 0;
+      - *ACT_LESS
+  - c:
+    - 'Server sends 2.05 (Content) response with a Block2 option indicating:'
+    - - NUM = k where “k” is the block number used at step 4;
+      - M = 1;
+      - *ACT
+    - *FULL
+  - n: Start of loop
+  - c:
+    - 'Client sends GET request for further blocks indicating:'
+    - - NUM = i where “i” is the block number of the current block;
+      - M = 0;
+      - *ACT
+  - c:
+    - 'Server sends 2.05 (Content) response with a Block2 option indicating:'
+    - - NUM = i where “i” is the block number used at step 6;
+      - M = 1;
+      - *ACT
+    - *FULL
+  - n: 'end of loop; final slice:'
+  - c:
+    - 'Client send GET request for the last block indicating:'
+    - - NUM = n where “n” is the last block number;
+      - M = 0;
+      - *ACT
+  - c:
+    - 'Server sends 2.05 (Content) response with a Block2 option indicating:'
+    - - NUM = n where “n” is the block number used at step 8;
+      - M = 0;
+      - *ACT
+    - *RUNT
+  - v: Client displays the received information
+  not: Steps 6 and 7 are in a loop.
+
+TD_COAP_BLOCK_03:
+  obj: Handle PUT blockwise transfer for large resource
+  cfg: CoAP_CFG_BASIC
+  ref: "[BLOCK] 2.2, 2.3, 2.5"
+  pre:
+  - Client supports Block1 transfers
+  - Server supports Block1 transfers
+  - Server offers a large updatable resource /large-update
+  seq:
+  - s: Client is requested to update resource /large-update on Server
+  - c:
+    - 'Client sends a PUT request containing Block1 option indicating:'
+    - - NUM = 0;
+      - M = 1;
+      - *DES
+    - *FULL
+  - c:
+    - 'Server sends 2.04 (Changed) response with a Block1 option indicating:'
+    - - NUM = 0;
+      - M = 0 (stateless) or 1 (atomic);
+      - *ACT_LESS
+  - n: Start of loop
+  - c:
+    - 'Client sends further requests containing Block1 option indicating:'
+    - - NUM = i where “i” is the block number of the current block. If the server
+        decreased the SZX parameter in step 3, then the client needs to adapt the block
+        size accordingly and resume the transfer from block number 2**(ACT_SZX – DES_SZX)
+        instead of block 1.
+      - M = 1;
+      - *ACT
+    - *FULL
+  - c:
+    - 'Server sends 2.04 (Changed) response containing Block1 option indicating:'
+    - - NUM = i where “i” is the block number used at step 4;
+      - M = 0 (stateless) or 1 (atomic);
+      - *ACT
+  - n: 'end of loop; final slice:'
+  - c:
+    - 'Client send PUT request containing the last block and indicating:'
+    - - NUM = n where “n” is the last block number;
+      - M = 0;
+      - *ACT
+    - *RUNT
+  - c:
+    - 'Server sends 2.04 (Changed) response with a Block1 option indicating:'
+    - - NUM = n where “n” is the block number used at step 6;
+      - M = 0;
+      - *ACT
+  - v: Server indicates presence of the complete updated resource /large-update
+  not: Steps 4 and 5 are in a loop.
+
+TD_COAP_BLOCK_04:
+  obj: Handle POST blockwise transfer for creating large resource
+  cfg: CoAP_CFG_BASIC
+  ref: "[BLOCK] 2.2, 2.3, 2.5"
+  pre:
+  - Client supports Block1 transfers
+  - Server supports Block1 transfers
+  - Server accepts creation of new resources on /large-create
+  seq:
+  - s: Client is requested to create a new resource /large-create on Server
+  - c:
+    - 'Client sends a POST request containing Block1 option indicating:'
+    - - NUM = 0;
+      - M = 1 (more);
+      - *DES
+    - *FULL
+  - c:
+    - 'Server sends 2.31 (Continue) response containing Block1 option indicating:'
+    - - NUM = 0;
+      - M = 1 (atomic);
+      - SZX (➔ACT_SZX) is less or equal to DES_SZX.
+  - n: Start of loop
+  - c:
+    - 'Client sends further POST requests containing Block1 option indicating:'
+    - - NUM = i where “i” is the block number of the current block.
+        If the server decreased the SZX parameter in step 3, then the
+        client needs to adapt the block size accordingly and resumes
+        the transfer from block number 2**(DES_SZX - ACT_SZX)
+        instead of block 1.
+      - M = 1 (more);
+      - *ACT
+    - *FULL
+  - c:
+    - 'Server sends 2.31 (Continue) response containing Block1 option indicating:'
+    - - NUM = i where “i” is the block number used at step 4;
+      - M = 1 (atomic);
+      - SZX is ACT_SZX
+  - n: 'end of loop; final slice:'
+  - c:
+    - 'Client sends POST request containing the last block and indicating:'
+    - - NUM = n where “n” is the last block number;
+      - M = 0 (final);
+      - *ACT
+    - *RUNT
+  - c:
+    - 'Server sends 2.01 (Created) response containing Block1 option indicating:'
+    - - NUM = n where “n” is the block number used at step 6;
+      - M = 0 (final);
+      - *ACT
+    - and two Location-Path options
+    - - First option value must contain “large-create”
+      - Second option value is a (single) path segment chosen by the server (PS)
+      - none of the Location-Path options contain a ‘/’
+  - v: Client displays the response
+  - v: Server indicates presence of the complete new resource /large-create/PS
+  - n: 'verify resource creation (optional):'
+  - c: Client sends GET request to /large-create/PS (i.e., using Uri-Path options simpley copied from the Location-Path of step 7)
+  - c: Server sends 2.05 (Content) response with representation of created resource, potentially making use of the Block2 protocol
+  - v: Client indicates the value of the newly created resource
+  not: Steps 4 and 5 are in a loop.
+
+TD_COAP_BLOCK_05:
+  obj: Handle POST with two-way blockwise transfer
+  cfg: CoAP_CFG_BASIC
+  ref: "[BLOCK] 2.2, 2.3, 2.5"
+  pre:
+  - Client supports Block1 and Block2 transfers
+  - Server supports Block1 and Block2 transfers
+  - Server accepts large post requests on /large-post
+  seq:
+  - s: Client is requested to send a large represenation to  /large-post on Server
+  - c:
+    - 'Client sends a POST request containing Block1 option indicating:'
+    - - NUM = 0;
+      - M = 1 (more);
+      - *DES
+    - *FULL
+  - c:
+    - 'Server sends 2.31 (Continue) response containing Block1 option indicating:'
+    - - NUM = 0;
+      - M = 1 (atomic);
+      - SZX (➔ACT_SZX) is less or equal to DES_SZX.
+  - n: Start of loop
+  - c:
+    - 'Client sends further POST requests containing Block1 option indicating:'
+    - - NUM = i where “i” is the block number of the current block.
+        If the server decreased the SZX parameter in step 3, then the
+        client needs to adapt the block size accordingly and resumes
+        the transfer from block number 2**(DES_SZX - ACT_SZX)
+        instead of block 1.
+      - M = 1 (more);
+      - *ACT
+    - *FULL
+  - c:
+    - 'Server sends 2.31 (Continue) response containing Block1 option indicating:'
+    - - NUM = i where “i” is the block number used at step 4;
+      - M = 1 (atomic);
+      - SZX is ACT_SZX
+  - n: 'end of loop; final request slice and first response slice:'
+  - c:
+    - 'Client sends POST request containing the last block and indicating:'
+    - - NUM = n where “n” is the last block number;
+      - M = 0 (final);
+      - *ACT
+    - *RUNT
+  - c:
+    - 'Server sends 2.04 (Changed) response containing Block1 option indicating:'
+    - - NUM = n where “n” is the block number used at step 6;
+      - M = 0 (final);
+      - *ACT
+    - 'and a Block2 option indicating:'
+    - - NUM = 0
+      - M = 1 (more);
+      - &rDES SZX (➔rDES_SZX) is the desired block size.
+    - *FULL
+  - c:
+    - 'Client switches to blockwise retrieval of response and sends a POST request, with the same options except for Block1, without payload, with a Block2 option indicating:'
+    - - NUM is the next block number k = (2**(rDES_SZX – rACT_SZX));
+      - M = 0;
+      - &rACT_LESS SZX (➔rACT_SZX) is less than or equal to rDES_SZX.
+  - c:
+    - 'Server sends 2.04 (Changed) response with a Block2 option indicating:'
+    - - NUM = k where “k” is the block number used at step 8;
+      - M = 1;
+      - &rACT SZX is rACT_SZX.
+    - *FULL
+  - n: Start of retrieval loop
+  - c:
+    - 'Client sends a similar POST request for retrieving a further block indicating:'
+    - - NUM = i where “i” is the block number of the current block;
+      - M = 0;
+      - *rACT
+  - c:
+    - 'Server sends 2.04 (Changed) response with a Block2 option indicating:'
+    - - NUM = i where “i” is the block number used at step 10;
+      - M = 1;
+      - *rACT
+    - *FULL
+  - n: 'end of retrieval loop; final slice:'
+  - c:
+    - 'Client sends another POST request (which will retrieve the last block) indicating:'
+    - - NUM = n where “n” is the last block number;
+      - M = 0;
+      - *rACT
+  - c:
+    - 'Server sends 2.04 (Changed) response with a Block2 option indicating:'
+    - - NUM = n where “n” is the block number used at step 12;
+      - M = 0;
+      - *rACT
+    - *RUNT
+  - v: Client displays the response
+  not:
+    - Steps 4 and 5 are in a loop.
+    - Steps 10 and 11 are in a loop.
+    - There is no initiative change in block-13.
+
+TD_COAP_OBS_01:
+  obj: Handle resource observation with CON messages
+  cfg: CoAP_CFG_BASIC
+  ref: &OBS_BASIC "[OBSERVE] 1.2, 3, 4"
+  pre:
+  - Client supports Observe option
+  - Server supports Observe option
+  - &OBS_CON Server offers an observable resource /obs which changes periodically (e.g. every
+    5s) which produces confirmable notifications
+  seq:
+  - s: &REQ_GET_OBS 'Client is requested to send to the server a confirmable GET request with observe option for resource /obs '
+  - c: &REQ_GET_OBS2
+    - 'The request sent by client contains:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+      - &GENTOK Token value ➔ t, a value generated by the client
+      - Observe option = empty
+  - c: &REQ_GET_OBS3
+    - 'Server sends the response containing:'
+    - - Type = 2 (ACK)
+      - &CONTENT Code = 2.05 (Content)
+      - Content-format of the resource /obs, ➔ f
+      - &TOKVAL2 Token value = t, same as one found in the step 2
+      - Observe option with a sequence number
+  - n: "After some time elapses, repeatedly:"
+  - c: &REQ_GET_OBS4
+    - 'Server sends a notification containing:'
+    - - Type = 0 (CON)
+      - *CONTENT
+      - &CF3 Content-format = f, same as one found in the step 3
+      - Token value = t, same as one found in the step 3
+      - &OBSINCR Observe option indicating increasing values (sequence
+        number arithmetic modulo 2**24), unless more than 256 seconds
+        elapsed
+  - c: Client sends an ACK
+  - v: Client displays the received information
+  not: Steps 4-6 are in a loop.
+
+TD_COAP_OBS_02:
+  obj: Handle resource observation with NON messages
+  cfg: CoAP_CFG_BASIC
+  ref: *OBS_BASIC
+  pre:
+  - Client supports Observe option
+  - Server supports Observe option
+  - Server offers an observable resource /obs-non which changes periodically (e.g.
+    every 5s) which produces non-confirmable notifications
+  seq:
+  - s: Client is requested to send to the server a non-confirmable GET request with
+      observe option for resource /obs-non
+  - c:
+    - 'The request sent by client contains:'
+    - - Type = 1 (NON)
+      - Code = 1 (GET)
+      - *GENTOK
+      - Observe option = empty
+  - n: "After some time elapses, repeatedly:"
+  - c:
+    - 'Server sends a notification containing:'
+    - - Type = 1 (NON)
+      - *CONTENT
+      - Content-format = the same for all notifications
+      - *TOKVAL2
+      - *OBSINCR
+  - v: Client displays the received information
+  not:
+    - Steps 3-4 are in a loop.
+    - We don't run the test long enough to invoke the 24-hour rule in
+      [OBSERVE] 4.5, but in step 4 the server could still occasionally
+      send a confirmable message, which then needs to be acknowledged
+      by the client
+    - (The request in step 2 could as well be a confirmable request.)
+
+TD_COAP_OBS_04:
+  obj: Client detection of deregistration (Max-Age)
+  cfg: CoAP_CFG_BASIC
+  ref: "[OBSERVE] 3.3.1 §4"
+  pre:
+  - Client supports Observe option
+  - Server supports Observe option
+  - *OBS_CON
+  seq:
+  - s: Client is requested to send to the server a confirmable GET request with observe
+      option for resource /obs
+  - c:
+    - 'The request sent by client contains:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+      - *GENTOK
+      - Observe option = empty
+  - c:
+    - 'Server sends the response containing:'
+    - - Type = 2 (ACK)
+      - *CONTENT
+      - Content-format of the resource /obs, ➔ f
+      - *TOKVAL2
+      - Observe option with a sequence number
+  - c:
+    - 'Server sends a notification containing:'
+    - - Type = 0 (CON)
+      - *CONTENT
+      - *CF3
+      - *TOKVAL2
+      - *OBSINCR
+  - v: Client displays the received information
+  - c: Client sends an ACK
+  - n: forcibly remove the observation relationship from the server
+  - s: Server is rebooted or in another way caused to lose its observation state
+  - c: Server does not send notifications
+  - v: Client does not display updated information
+  - n: Client re-registers
+  - v: After a while (see note) the client internally decides to send
+       another GET request to the server with observe option for
+       resource /obs, using Token t again to confirm the registration
+  - v:
+    - 'Client sends a GET request to the server for resource /obs:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+      - *TOKVAL2
+      - Observe option = empty
+  - c:
+    - 'Server sends the response containing:'
+    - - Type = 2 (ACK)
+      - *CONTENT
+      - Content-format of the resource /obs, ➔ f
+      - *TOKVAL2
+      - Observe option with a sequence number that is not necessarily increasing
+  - c:
+    - 'Server sends a notification containing:'
+    - - Type = 0 (CON)
+      - *CONTENT
+      - Content-format = same as one found in the step 12
+      - *TOKVAL2
+      - *OBSINCR
+  - v: Client displays the received information
+  - c: Client sends an ACK
+  not:
+  - Steps 4-6 are in a loop.
+  - Step 7-9 are asynchronous to the loop 4-6.
+  - Steps 13-15 are in a loop.
+  - A new registration should be attempted after Max-Age + MAX_LATENCY as recommended
+    by [OBSERVE]. MAX_LATENCY is defined by [COAP] and set to 100 seconds.
+
+TD_COAP_OBS_05:
+  obj: Server detection of deregistration (client OFF)
+  cfg: CoAP_CFG_BASIC
+  ref: "[OBSERVE] 4.5 item 2 (see also ticket #350)"
+  pre:
+  - Client supports Observe option
+  - Server supports Observe option
+  - *OBS_CON
+  seq:
+  - s: *REQ_GET_OBS
+  - c: *REQ_GET_OBS2
+  - c: *REQ_GET_OBS3
+  - c: *REQ_GET_OBS4
+  - c: Client displays the received information
+  - c: Client sends an ACK
+  - n: Cause a timeout
+  - s: Client is switched off
+  - c:
+    - Server’s confirmable notifications are not acknowledged
+    - Server’s retransmissions have an updated Observe option value
+  - v: Server can keep retransmitting the responses for a while,
+       but stops transmitting notifications after a final timeout
+  not:
+  - Steps 4-6 are in a loop.
+  - Step 7-9 are asynchronous to the loop.
+
+TD_COAP_OBS_06:
+  obj: Server detection of deregistration (explicit RST)
+  cfg: CoAP_CFG_BASIC
+  ref: "[OBSERVE] 4.2 item 2"
+  pre:
+  - Client supports Observe option
+  - Server supports Observe option
+  - *OBS_CON
+  seq:
+  - s: *REQ_GET_OBS
+  - c: *REQ_GET_OBS2
+  - c: *REQ_GET_OBS3
+  - c: *REQ_GET_OBS4
+  - c: Client displays the received information
+  - c: Client sends an ACK
+  - n: Cause an RST
+  - s: 'Client is rebooted '
+  - c:
+    - Server is still sending notifications for the request in step 2 as in step 4
+  - v: Client discards response and does not display information
+  - c: Client sends RST to Server
+  - v: Server does not send further response
+  - v: Client does not display further received information
+  not:
+  - Steps 4-6 are in a loop.
+  - Step 7-12 are asynchronous to the loop.
+
+TD_COAP_OBS_07:
+  obj: Server cleans the observers list on DELETE
+  cfg: CoAP_CFG_BASIC
+  ref: "[OBSERVE] 3.2 §2"
+  pre:
+  - Client supports Observe option
+  - Server supports Observe option
+  - *OBS_CON
+  seq:
+  - s: *REQ_GET_OBS
+  - c: *REQ_GET_OBS2
+  - c: *REQ_GET_OBS3
+  - c: *REQ_GET_OBS4
+  - c: Client displays the received information
+  - c: Client sends an ACK
+  - s: Delete the /obs resource of the server (either locally or by having another
+       CoAP client perform a DELETE request)
+  - c:
+    - 'Server sends a notification containing:'
+    - - Type = 0 (CON)
+      - Code = 4.04 (Not Found)
+      - *TOKVAL2
+      - *OBSINCR
+  - v: Server does not send further notification
+  - v: Client does not display further received information
+  not:
+  - Steps 4-6 are in a loop.
+  - Step 7-10 are asynchronous to the loop.
+TD_COAP_OBS_08:
+  obj: Server cleans the observers list when observed resource content-format changes
+  cfg: CoAP_CFG_BASIC
+  ref: "[OBSERVE] 4.2 §3"
+  pre:
+  - Client supports Observe option
+  - Server supports Observe option
+  - *OBS_CON
+  seq:
+  - s: *REQ_GET_OBS
+  - c: *REQ_GET_OBS2
+  - c: *REQ_GET_OBS3
+  - c: *REQ_GET_OBS4
+  - c: Client displays the received information
+  - c: Client sends an ACK
+  - s: Update the /obs resource of the server’s resource with a new payload having
+      a different Content-Format (either locally or by having another CoAP client
+      perform a DELETE request)
+  - c:
+    - 'Server sends notification containing:'
+    - - Type = 0 (CON)
+      - Code = 5.00 (Internal Server Error)
+      - *TOKVAL2
+      - *OBSINCR
+  - v: Server does not send further notifications
+  - v: Client does not display further received information
+  not:
+  - Steps 4-6 are in a loop.
+  - Step 7-10 are asynchronous to the loop.
+
+TD_COAP_OBS_09:
+  obj: Update of the observed resource
+  cfg: CoAP_CFG_BASIC
+  ref: "[OBSERVE] 4.2 §3"
+  pre:
+  - Client supports Observe option
+  - Server supports Observe option
+  - *OBS_CON
+  seq:
+  - s: *REQ_GET_OBS
+  - c: *REQ_GET_OBS2
+  - c: *REQ_GET_OBS3
+  - c: *REQ_GET_OBS4
+  - c: Client displays the received information
+  - c: Client sends an ACK
+  - s: Update the /obs resource of the server’s resource with a new payload having
+      the same Content-Format (either locally or by having another CoAP client perform
+      a DELETE request)
+  - c:
+    - 'Server notifications contains:'
+    - - Type = 0 (CON)
+      - *CONTENT
+      - *CF3
+      - *TOKVAL2
+      - *OBSINCR
+      - Payload = the new value sent at step 7
+  - v: Client displays the new value of /obs sent in step 8
+  - c: Client sends an ACK
+  not:
+  - Steps 4-6 are in a loop.
+  - Step 7-9 are asynchronous to the loop 4-6.
+  - Steps 8-10 are in a loop (the same loop at steps 4-6 but /obs is updated).
