@@ -21,3 +21,11 @@ In the test descriptions, the following shorthands are used for the references:
 | \[BLOCK]   | [draft-ietf-core-block-14](http://tools.ietf.org/html/draft-ietf-core-block-14.txt)     |
 | \[LINK]    | [RFC 6690](http://tools.ietf.org/html/rfc6690.txt)                                      |
 
+The following parameters have not yet been assigned by IANA but are
+needed for the DTLS tests:
+
+* 0xC0 0xAC as the cipher suite identifier for TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8
+* For RPK:
+  * client_certificate_type: 122
+  * server_certificate_type: 123
+
