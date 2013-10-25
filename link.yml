@@ -1,0 +1,182 @@
+TD_COAP_LINK_01:
+  obj: Access to well-known interface for resource discovery
+  cfg: CoAP_CFG_BASIC
+  ref: "[LINK]"
+  pre:
+  - Client and server supports CoRE Link Format
+  - Server supports /.well-known/core resource and the CoRE Link Format
+  seq:
+  - s: 'Client is requested to retrieve Server’s list of resource '
+  - c: Client sends a GET request to Server for /.well-known/core resource
+  - c:
+    - 'Server sends response containing:'
+    - Content-format option indicating 40 (application/link-format)
+    - Code indicating 2.05 (Content)
+    - Payload indicating all the links available on Server
+  - v: Client displays the list of resources available on Server
+TD_COAP_LINK_02:
+  obj: Use filtered requests for limiting discovery results
+  cfg: CoAP_CFG_BASIC
+  ref: "[LINK] 4.1"
+  pre:
+  - Client supports CoRE Link Format
+  - Server supports CoRE Link Format
+  - Server offers different types of resources (Type1, Type2, ...; see Note)
+  seq:
+  - s: Client is requested to retrieve Server’s list of resource of a specific type
+      Type1
+  - c: Client sends a GET request to Server for /.well-known/core resource containing
+      URI-Query indicating “rt=Type1”
+  - c:
+    - 'Server sends response containing:'
+    - Content- format option indicating 40 (application/link-format) Payload indicating
+      only the links of type Type1 available on Server
+  - v: Client displays the list of resources of type Type1 available on Server
+  not: Type1, Type2, ... refer to real resource types available on Server and shall
+    be extracted from Server’s /.well-known/core resource
+TD_COAP_LINK_03:
+  obj: Handle empty prefix value strings
+  cfg: CoAP_CFG_BASIC
+  ref: "[LINK] 4.1 §2"
+  pre:
+  - Client supports Core Link Format
+  - Server supports Core Link Format
+  - Server offers different types of resources (Type1, Type2, ...; see Note)
+  - Server offers resources with no type (i.e. no rt attribute)
+  seq:
+  - s: Client is requested to retrieve Server’s list of resources matching an rt empty
+      value
+  - c: Client sends a GET request to Server for /.well-known/core resource containing
+      URI-Query indicating rt=“*”
+  - c:
+    - 'Server sends response containing:'
+    - Content-format option indicating 40 (application/link-format)
+    - Payload indicating only the links having an rt attribute
+  - v: Client displays the list of resources with rt attribute available on Server
+  not: Type1, Type2, ... refer to real resource types available on Server and shall
+    be extracted from Server’s /.well-known/core resource
+TD_COAP_LINK_04:
+  obj: Filter discovery results in presence of multiple rt attributes
+  cfg: CoAP_CFG_BASIC
+  ref: "[LINK] 3.1, 4.1 §2"
+  pre:
+  - Client supports Core Link Format
+  - Server supports Core Link Format
+  - - 'Server offers 4 groups of resources:'
+    - - Resources with rt=“Type1 Type2”
+      - Resources with rt=“Type2 Type3”
+      - Resources with rt=“Type1 Type3”
+      - Resources with rt=“”
+  seq:
+  - s: Client is requested to retrieve Server’s list of resources of a specific type
+      Type2
+  - c: Client sends a GET request to Server for /.well-known/core resource containing
+      URI-Query indicating rt=“Type2”
+  - c:
+    - 'Server sends response containing:'
+    - Content-format option indicating 40 (application/link-format)
+    - Payload indicating only the links of groups 1 and 2
+  - v: Client displays the list of resources of type Type2 available on Server
+TD_COAP_LINK_05:
+  obj: Filter discovery results using if attribute and prefix value strings
+  cfg: CoAP_CFG_BASIC
+  ref: "[LINK] 3.2, 4.1 §5"
+  pre:
+  - Client supports Core Link Format
+  - Server supports Core Link Format
+  - - 'Server offers 4 groups of resources:'
+    - - Resources with if=“If1”
+      - Resources with if=“If2”
+      - Resources with if=“foo”
+      - Resources with no if attribute
+  seq:
+  - s: Client is requested to retrieve Server’s list of resources matching the interface
+      description pattern “If*”
+  - c: Client sends a GET request to Server for /.well-known/core resource containing
+      URI-Query indicating if=“If*”
+  - c:
+    - 'Server sends response containing:'
+    - Content-format option indicating 40 (application/link-format)
+    - Payload indicating only the links of groups 1 and 2
+  - v: Client displays the retrieved list of resources
+TD_COAP_LINK_06:
+  obj: Filter discovery results using sz attribute and prefix value strings
+  cfg: CoAP_CFG_BASIC
+  ref: "[LINK] 3.3, 4.1 §5"
+  pre:
+  - Client supports Core Link Format
+  - Server supports Core Link Format
+  - Server offers resource with sz attribute
+  - Server offers resources with no sz attribute
+  seq:
+  - s: Client is requested to retrieve Server’s list of resources having a sz attribute
+  - c: Client sends a GET request to Server for /.well-known/core resource containing
+      URI-Query indicating sz=“*”
+  - c:
+    - 'Server sends response containing:'
+    - Content-format option indicating 40 (application/link-format)
+    - Payload indicating only the links having a sz attribute
+  - v: Client displays the retrieved list of resources
+TD_COAP_LINK_07:
+  obj: Filter discovery results using href attribute and complete value strings
+  cfg: CoAP_CFG_BASIC
+  ref: "[LINK] 4.1"
+  pre:
+  - Client supports Core Link Format
+  - Server supports Core Link Format
+  - Server offers resources /link1 /link2 and /link3
+  seq:
+  - s: Client is requested to retrieve the link-value anchored at /link1
+  - c: Client sends a GET request to Server for /.well-known/core resource containing
+      URI-Query indicating href=“/link1”
+  - c:
+    - 'Server sends response containing:'
+    - Content-format option indicating 40 (application/link-format)
+    - Payload indicating only the link for /link1
+  - v: Client displays the retrieved list of resources
+TD_COAP_LINK_08:
+  obj: Filter discovery results using href attribute and prefix value strings
+  cfg: CoAP_CFG_BASIC
+  ref: "[LINK] 4.1"
+  pre:
+  - Client supports Core Link Format
+  - Server supports Core Link Format
+  - Server offers resources /link1 /link2 and /link3
+  - Server offers resource /test
+  seq:
+  - s: Client is requested to retrieve the link-value anchored at /link*
+  - c: Client sends a GET request to Server for /.well-known/core resource containing
+      URI-Query indicating href=“/link*”
+  - c:
+    - 'Server sends response containing:'
+    - Content-format option indicating 40 (application/link-format)
+    - Payload indicating only the link matching /link*
+  - v: Client displays the retrieved list of resources
+TD_COAP_LINK_09:
+  obj: Arrange link descriptions hierarchically
+  cfg: CoAP_CFG_BASIC
+  ref: "[LINK] 5 §4"
+  pre:
+  - Client supports Core Link Format
+  - Server supports Core Link Format
+  - Server offers an entry located at /path with ct=40
+  - Server offers sub-resources /path/sub1, /path/sub2, … (see Note)
+  seq:
+  - s: Client is requested to retrieve one of the sub-resources
+  - c: 'Client sends a GET request to Server for /.well-known/core resource '
+  - c:
+    - 'Server sends response containing:'
+    - Content-format option indicating 40 (application/link-format) Payload indicating
+      the link description for /path
+  - c: Client sends a GET request for /path to Server
+  - c:
+    - 'Server sends response containing:'
+    - Content-format option indicating 40 (application/link-format) Payload indicating
+      the link description for /path/sub1, /path/sub2, …
+  - c: Client sends a GET request for /path/sub1
+  - c:
+    - Server sends 2.05 (Content) response.
+    - Payload contains /path/sub1
+  - v: Client displays the retrieved sub-resource.
+  not: "/path/sub1, /path/sub2, … refer to real resources available on Server and
+    shall be extracted from Server’s /.well-known/core resource"

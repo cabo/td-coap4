@@ -1,0 +1,953 @@
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <style>
+      table {
+        border-collapse: collapse;
+        font-family: Arial, Sans-Serif;
+        margin-bottom: 2em;
+      }
+      table th, table td {
+        min-width: 30px;
+        padding: 4px 0 4px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_LINK_01
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Access to well-known interface for resource discovery
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [LINK]
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client and server supports CoRE Link Format</li>
+          <li>Server supports /.well-known/core resource and the CoRE Link Format</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to retrieve Server’s list of resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends a GET request to Server for /.well-known/core resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Server sends response containing:</li>
+          <li>Content-format option indicating 40 (application/link-format)</li>
+          <li>Code indicating 2.05 (Content)</li>
+          <li>Payload indicating all the links available on Server</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the list of resources available on Server
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_LINK_02
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Use filtered requests for limiting discovery results
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [LINK] 4.1
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client supports CoRE Link Format</li>
+          <li>Server supports CoRE Link Format</li>
+          <li>Server offers different types of resources (Type1, Type2, ...; see Note)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to retrieve Server’s list of resource of a specific type Type1
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends a GET request to Server for /.well-known/core resource containing URI-Query indicating “rt=Type1”
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Server sends response containing:</li>
+          <li>Content- format option indicating 40 (application/link-format) Payload indicating only the links of type Type1 available on Server</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the list of resources of type Type1 available on Server
+        </td>
+      </tr>
+      <th>
+        Notes:
+      </th>
+      <td colspan='3'>
+        Type1, Type2, ... refer to real resource types available on Server and shall be extracted from Server’s /.well-known/core resource
+      </td>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_LINK_03
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Handle empty prefix value strings
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [LINK] 4.1 §2
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client supports Core Link Format</li>
+          <li>Server supports Core Link Format</li>
+          <li>Server offers different types of resources (Type1, Type2, ...; see Note)</li>
+          <li>Server offers resources with no type (i.e. no rt attribute)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to retrieve Server’s list of resources matching an rt empty value
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends a GET request to Server for /.well-known/core resource containing URI-Query indicating rt=“*”
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Server sends response containing:</li>
+          <li>Content-format option indicating 40 (application/link-format)</li>
+          <li>Payload indicating only the links having an rt attribute</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the list of resources with rt attribute available on Server
+        </td>
+      </tr>
+      <th>
+        Notes:
+      </th>
+      <td colspan='3'>
+        Type1, Type2, ... refer to real resource types available on Server and shall be extracted from Server’s /.well-known/core resource
+      </td>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_LINK_04
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Filter discovery results in presence of multiple rt attributes
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [LINK] 3.1, 4.1 §2
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client supports Core Link Format</li>
+          <li>Server supports Core Link Format</li>
+          <li>Server offers 4 groups of resources:<ul><li>Resources with rt=“Type1 Type2”</li>
+          <li>Resources with rt=“Type2 Type3”</li>
+          <li>Resources with rt=“Type1 Type3”</li>
+          <li>Resources with rt=“”</li>
+          </ul></li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to retrieve Server’s list of resources of a specific type Type2
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends a GET request to Server for /.well-known/core resource containing URI-Query indicating rt=“Type2”
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Server sends response containing:</li>
+          <li>Content-format option indicating 40 (application/link-format)</li>
+          <li>Payload indicating only the links of groups 1 and 2</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the list of resources of type Type2 available on Server
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_LINK_05
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Filter discovery results using if attribute and prefix value strings
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [LINK] 3.2, 4.1 §5
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client supports Core Link Format</li>
+          <li>Server supports Core Link Format</li>
+          <li>Server offers 4 groups of resources:<ul><li>Resources with if=“If1”</li>
+          <li>Resources with if=“If2”</li>
+          <li>Resources with if=“foo”</li>
+          <li>Resources with no if attribute</li>
+          </ul></li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to retrieve Server’s list of resources matching the interface description pattern “If*”
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends a GET request to Server for /.well-known/core resource containing URI-Query indicating if=“If*”
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Server sends response containing:</li>
+          <li>Content-format option indicating 40 (application/link-format)</li>
+          <li>Payload indicating only the links of groups 1 and 2</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the retrieved list of resources
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_LINK_06
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Filter discovery results using sz attribute and prefix value strings
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [LINK] 3.3, 4.1 §5
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client supports Core Link Format</li>
+          <li>Server supports Core Link Format</li>
+          <li>Server offers resource with sz attribute</li>
+          <li>Server offers resources with no sz attribute</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to retrieve Server’s list of resources having a sz attribute
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends a GET request to Server for /.well-known/core resource containing URI-Query indicating sz=“*”
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Server sends response containing:</li>
+          <li>Content-format option indicating 40 (application/link-format)</li>
+          <li>Payload indicating only the links having a sz attribute</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the retrieved list of resources
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_LINK_07
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Filter discovery results using href attribute and complete value strings
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [LINK] 4.1
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client supports Core Link Format</li>
+          <li>Server supports Core Link Format</li>
+          <li>Server offers resources /link1 /link2 and /link3</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to retrieve the link-value anchored at /link1
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends a GET request to Server for /.well-known/core resource containing URI-Query indicating href=“/link1”
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Server sends response containing:</li>
+          <li>Content-format option indicating 40 (application/link-format)</li>
+          <li>Payload indicating only the link for /link1</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the retrieved list of resources
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_LINK_08
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Filter discovery results using href attribute and prefix value strings
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [LINK] 4.1
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client supports Core Link Format</li>
+          <li>Server supports Core Link Format</li>
+          <li>Server offers resources /link1 /link2 and /link3</li>
+          <li>Server offers resource /test</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to retrieve the link-value anchored at /link*
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends a GET request to Server for /.well-known/core resource containing URI-Query indicating href=“/link*”
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Server sends response containing:</li>
+          <li>Content-format option indicating 40 (application/link-format)</li>
+          <li>Payload indicating only the link matching /link*</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the retrieved list of resources
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_LINK_09
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Arrange link descriptions hierarchically
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [LINK] 5 §4
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client supports Core Link Format</li>
+          <li>Server supports Core Link Format</li>
+          <li>Server offers an entry located at /path with ct=40</li>
+          <li>Server offers sub-resources /path/sub1, /path/sub2, … (see Note)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to retrieve one of the sub-resources
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends a GET request to Server for /.well-known/core resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Server sends response containing:</li>
+          <li>Content-format option indicating 40 (application/link-format) Payload indicating the link description for /path</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends a GET request for /path to Server
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Server sends response containing:</li>
+          <li>Content-format option indicating 40 (application/link-format) Payload indicating the link description for /path/sub1, /path/sub2, …</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          6
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends a GET request for /path/sub1
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          7
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Server sends 2.05 (Content) response.</li>
+          <li>Payload contains /path/sub1</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          8
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the retrieved sub-resource.
+        </td>
+      </tr>
+      <th>
+        Notes:
+      </th>
+      <td colspan='3'>
+        /path/sub1, /path/sub2, … refer to real resources available on Server and shall be extracted from Server’s /.well-known/core resource
+      </td>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,3012 @@
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <style>
+      table {
+        border-collapse: collapse;
+        font-family: Arial, Sans-Serif;
+        margin-bottom: 2em;
+      }
+      table th, table td {
+        min-width: 30px;
+        padding: 4px 0 4px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_01
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform GET transaction (CON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 5.8.1, 1.2, 2.1, 2.2, 3.1
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server offers the resource /test with resource content is not empty that handles GET with an arbitrary payload
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a GET request with:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 1 (GET)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type=0 and Code=1</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.05 (Content)</li>
+          <li>Message ID = CMID, Token = CTOK</li>
+          <li>Content-format option</li>
+          <li>Non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the received information
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_02
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform DELETE transaction (CON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 5.8.4, 1.2, 2.1, 2.2, 3.1
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server offers a /test resource that handles DELETE
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a DELETE request with:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 4 (DELETE)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type=0 and Code=4</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.02 (Deleted)</li>
+          <li>Message ID = CMID, Token = CTOK</li>
+          <li>Optional Content-format option</li>
+          <li>Empty or non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the received information
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_03
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform PUT transaction (CON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 5.8.3, 1.2, 2.1, 2.2, 3.1
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server offers already available resource /test or accepts creation of new resource on /test that handles PUT
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a PUT request with:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 3 (PUT)</li>
+          <li>Content-format option</li>
+          <li>Empty or non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type=0 and Code=3</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Server displays received information
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.04 (Changed) or 2.01 (Created)</li>
+          <li>Message ID = CMID, Token = CTOK</li>
+          <li>Optional Content-format option</li>
+          <li>Empty or non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the received response
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_04
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform POST transaction (CON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 5.8.2, 1.2, 2.1, 2.2, 3.1
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server accepts POST request on /test
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a POST request with:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 2(POST)</li>
+          <li>Content-format option</li>
+          <li>Empty or non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type=0 and Code=2</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Server displays received information
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.01 (Created) or 2.04 (Changed)</li>
+          <li>Message ID = CMID, Token = CTOK</li>
+          <li>Optional Content-format option</li>
+          <li>Zero or more Location-path options</li>
+          <li>Empty or non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the received response
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_05
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform GET transaction (NON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 5.8.1, 5.2.3
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server offers a /test resource with resource content is not empty that handles GET
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a GET request with:<ul><li>Type = 1 (NON)</li>
+          <li>Code = 1 (GET)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type=1 and Code=1</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Type = 1 (NON)</li>
+          <li>Code = 2.05 (Content)</li>
+          <li>Server-generated Message ID (➔ SMID)</li>
+          <li>Token = CTOK</li>
+          <li>Content-format option</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the received information
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_06
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform DELETE transaction (NON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 5.8.4, 5.2.3
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server offers a /test resource that handles DELETE
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a DELETE request with:<ul><li>Type = 1 (NON)</li>
+          <li>Code = 4 (DELETE)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type=1 and Code=4</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Type = 1 (NON)</li>
+          <li>Code = 2.02 (Deleted)</li>
+          <li>Server-generated Message ID (➔ SMID)</li>
+          <li>Token = CTOK</li>
+          <li>Optional Content-format option</li>
+          <li>Empty or non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the received information
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_07
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform PUT transaction (NON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 5.8.3, 5.2.3
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server offers a /test resource that handles PUT
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a PUT request with:<ul><li>Type = 1 (NON)</li>
+          <li>Code = 3 (PUT)</li>
+          <li>An arbitrary payload</li>
+          <li>Content-format option</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type=1 and Code=3</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Server displays the received information
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Type = 1 (NON)</li>
+          <li>Code = 2.04 (Changed) or 2.01 (Created)</li>
+          <li>Server-generated Message ID (➔ SMID)</li>
+          <li>Token = CTOK</li>
+          <li>Optional Content-format option</li>
+          <li>Empty or non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the received response
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_08
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform POST transaction (NON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 5.8.2, 5.2.3
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server accepts POST request on /test
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a POST request with:<ul><li>Type = 1 (NON)</li>
+          <li>Code = 2(POST)</li>
+          <li>An arbitrary payload</li>
+          <li>Content-format option</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type=1 and Code=2</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Server displays the received information
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Type = 1 (NON)</li>
+          <li>Code = 2.01 (Created) or 2.04 (Changed)</li>
+          <li>Server-generated Message ID (➔ SMID)</li>
+          <li>Token = CTOK</li>
+          <li>Zero or more Location-path options</li>
+          <li>Optional Content-format option</li>
+          <li>Empty or non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the received response
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_09
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform GET transaction with separate response (CON mode, no piggyback)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 5.8.1, 5.2.2
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server offers a resource /separate which is not served immediately and which therefore is not acknowledged in a piggybacked way.
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable GET request to server’s resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 1 (GET)</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Type = 2 (ACK)</li>
+          <li>Code = 0</li>
+          <li>Message ID = CMID</li>
+          <li>Empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          Some time (a couple of seconds) elapses.
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 2.05 (Content)</li>
+          <li>Server-generated Message ID (➔ SMID)</li>
+          <li>Token = CTOK</li>
+          <li>Content-format option</li>
+          <li>Non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends response containing:<ul><li>Type = 2 (ACK)</li>
+          <li>Code = 0</li>
+          <li>Message ID = SMID</li>
+          <li>Empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          6
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+      <th>
+        Notes:
+      </th>
+      <td colspan='3'>
+        Steps 3 and 4 may occur out-of-order
+      </td>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_10
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform GET transaction containing non-empty Token (CON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 2.2, 5.8.1, 5.10.1
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server offers a /test resource with resource content is not empty that handles GET
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a GET request to server’s resource with non-empty Token option
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 1 (GET)</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          <li>Length of the token should be between 1 to 8 Bytes</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.05 (Content)</li>
+          <li>Message ID = CMID, Token = CTOK</li>
+          <li>Content-format option</li>
+          <li>Non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_11
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform GET transaction containing non-empty Token with a separate response (CON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 2.2, 5.2.2, 5.8.1
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server offers a resource /separate which is not served immediately and which therefore is not acknowledged in a piggybacked way.
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a GET request to server’s resource including Token option
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 1 (GET)</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          <li>Length of the token should be between 1 to 8 Bytes</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Type = 2 (ACK)</li>
+          <li>Code = 0</li>
+          <li>Message ID = CMID</li>
+          <li>Empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          Some time (a couple of seconds) elapses.
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 2.05 (Content)</li>
+          <li>Server-generated Message ID (➔ SMID)</li>
+          <li>Token = CTOK</li>
+          <li>Non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends response containing:<ul><li>Type = 2 (ACK)</li>
+          <li>Code = 0</li>
+          <li>Message ID = SMID</li>
+          <li>Empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          6
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_12
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform GET transaction using empty Token (CON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 2.2, 5.8.1, 5.10.1
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server offers the resource /test with resource content is not empty that handles GET with an arbitrary payload
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable GET request using zero-length Token to server’s resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 1 (GET)</li>
+          <li>Zero-Length Token ➔ CTOK</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.05 (Content)</li>
+          <li>Message ID = CMID, Token = CTOK</li>
+          <li>Content-format option</li>
+          <li>Non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+      <th>
+        Notes:
+      </th>
+      <td colspan='3'>
+        Not all clients may be able to send a zero-length Token
+      </td>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_13
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform GET transaction containing several URI-Path options (CON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 5.4.5, 5.10.2, 6.5
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server offers a /seg1/seg2/seg3 resource with resource content is not empty
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable GET request to server’s resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 1 (GET)</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          </ul>and three options of type Uri-Path, with the values:<ul><li>seg1</li>
+          <li>seg2</li>
+          <li>seg3</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.05 (Content)</li>
+          <li>Message ID = CMID, Token = CTOK</li>
+          <li>Content-format option</li>
+          <li>Non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_14
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform GET transaction containing several URI-Query options (CON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 5.4.5, 5.10.2, 6.5
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server offers a /query resource with resource content is not empty
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable GET request with three Query parameters (e.g. ?first=1&amp;second=2&amp;third=3) to the server’s resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 1 (GET)</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          </ul>and two options of Uri-Query, with values such as:<ul><li>first=1</li>
+          <li>second=2</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.05 (Content)</li>
+          <li>Message ID = CMID, Token = CTOK</li>
+          <li>Content-format option</li>
+          <li>Non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_15
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform GET transaction (CON mode, piggybacked response) in a lossy context
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_LOSSY
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 4.4.1, 5.2.1, 5.8.1
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Gateway is introduced and configured to produce packet losses</li>
+          <li>Server offers a /test resource with resource content is not empty that can handle GET</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable GET request to server’s resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Sent request must contain:<ul><li>Type = 0</li>
+          <li>Code = 1</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.05 (Content)</li>
+          <li>Message ID = CMID, Token = CTOK</li>
+          <li>Content-format option</li>
+          <li>Non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Repeat steps 1-4 until at least one of the following actions has been observed:<ul><li>One dropped request</li>
+          <li>One dropped response</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          6
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          <ul><li>For each case mentioned in step 5:</li>
+          <li>Observe that retransmission is launched</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_16
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform GET transaction (CON mode, delayed response) in a lossy context
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_LOSSY
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 4.4.1, 5.2.2, 5.8.1
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Gateway is introduced and configured to produce packet losses</li>
+          <li>Server offers a resource /separate which is not served immediately and which therefore is not acknowledged in a piggybacked way.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable GET request to server’s resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The requested sent by the client contains:<ul><li>Type = 0</li>
+          <li>Code = 1</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Type = 2 (ACK)</li>
+          <li>Code = 0</li>
+          <li>Message ID = CMID</li>
+          <li>Empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 2.05 (Content)</li>
+          <li>Server-generated Message ID (➔ SMID)</li>
+          <li>Non-empty Payload</li>
+          <li>Content-format option</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends response containing:<ul><li>Type = 2 (ACK)</li>
+          <li>Code = 0</li>
+          <li>Message ID = SMID</li>
+          <li>Empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          6
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          7
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Repeat steps 1-6 until at least one of the following actions has been observed:<ul><li>One dropped request</li>
+          <li>One dropped request ACK</li>
+          <li>One dropped response</li>
+          <li>One dropped response ACK and its retransmission</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          8
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          <ul><li>For each case mentioned in step 7:</li>
+          <li>Observe that retransmission is launched</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_17
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform GET transaction with a separate response (NON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 2.2, 5.2.2, 5.8.1
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server offers a resource /separate which is not served immediately and which therefore is not acknowledged in a piggybacked way.
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a non-confirmable GET request to server’s resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 1 (NON)</li>
+          <li>Code = 1 (GET)</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server DOES NOT send response containing:<ul><li>Type = 2 (ACK)</li>
+          <li>Same message ID as in the request in step 2</li>
+          <li>Empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          Some time (a couple of seconds) elapses.
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Type = 1 (NON)</li>
+          <li>Code = 2.05 (Content)</li>
+          <li>Server-generated Message ID (➔ SMID)</li>
+          <li>Content-format option</li>
+          <li>Non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_18
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform POST transaction with responses containing several Location-Path options (CON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 5.8.1, 5.10.8, 5.9.1.1
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server accepts creation of new resource on /test and the created resource is located at /location1/location2/location3 (resource does not exist yet)
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable POST request to server’s resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 0 (CON</li>
+          <li>Code = 2 (POST)</li>
+          <li>An arbitrary payload</li>
+          <li>Content-format option</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.01 (Created)</li>
+          </ul>and three options of type Location-Path, with the values (none of which contains a &quot;/&quot;):<ul><li>location1</li>
+          <li>location2</li>
+          <li>location3</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_19
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform POST transaction with responses containing several Location-Query options (CON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 5.8.1, 5.10.8, 5.9.1.1
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server accepts creation of new resource on uri /location-query, the location of the created resource contains two query parameters ?first=1&amp;second=2
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable POST request to server’s resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 2 (POST)</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          <li>Content-format option</li>
+          <li>Empty or non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.01 (Created)</li>
+          <li>Message ID = CMID, Token = CTOK</li>
+          <li>Optional Content-format option</li>
+          <li>Zero or more Location-path options</li>
+          <li>Empty or non-empty Payload</li>
+          </ul>and two options of type Location-Query, with the values (none of which contains a &quot;?&quot; or &quot;&amp;&quot;):<ul><li>first=1</li>
+          <li>second=2</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_20
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform GET transaction containing the Accept option (CON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 5.8.1, 5.10.5, 5.10.4
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          Server should provide a resource /multi-format which exists in two formats: <ul><li>text/plain;charset=utf-8</li>
+          <li>application/xml</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          client requests a resource in text format
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable GET request to server’s resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent request by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 1 (GET)</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          <li>Option type = Accept, value = 0 (text/plain;charset=utf-8)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.05 (Content)</li>
+          <li>Message ID = CMID, Token = CTOK</li>
+          <li>Option type = Content-Format, value = 0 (text/plain;charset=utf-8)</li>
+          <li>Payload = Content of the requested resource in text/plain;charset=utf-8 format</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          client requests a resource in xml format
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable GET request to server’s resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          6
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 1 (GET)</li>
+          <li>Another client-generated Message ID ≠ CMID (➔ CMID2)</li>
+          <li>Client-generated Token which may or may not be ≠ CTOK (➔ CTOK2)</li>
+          <li>Option type = Accept, value = 41 (application/xml)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          7
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.05 (Content)</li>
+          <li>Message ID = CMID2, Token = CTOK2</li>
+          <li>Option type = Content-Format, value = 41 (application/xml)</li>
+          </ul>Payload = Content of the requested resource in application/xml format
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          8
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_21
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform GET transaction containing the ETag option (CON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 5.8.1, 5.10.7, 5.10.10, 12.1.12
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Server should offer a /validate resource which may be made to vary over time</li>
+          <li>Client &amp; server supports ETag option</li>
+          <li>The Client’s cache must be purged</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          Verifying that client cache is empty
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable GET request to server’s resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent request by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 1 (GET)</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          <li>No ETag option</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.05 (Content)</li>
+          <li>Message ID = CMID, Token = CTOK</li>
+          <li>Option type = ETag, value = a value chosen by the server (➔ ETAG1)</li>
+          <li>Non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          Verifying client cache entry is still valid
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable GET request to server’s resource so as to check if the resource was updated
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          6
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 1 (GET)</li>
+          <li>Another client-generated Message ID ≠ CMID (➔ CMID2)</li>
+          <li>Client-generated Token which may or may not be ≠ CTOK (➔ CTOK2)</li>
+          <li>Option Type = ETag, value = ETAG1 (the ETag value received in step 3)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          7
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.03 (Valid)</li>
+          <li>Message ID = CMID2, Token = CTOK2</li>
+          <li>Option type = ETag, value = ETAG1</li>
+          <li>Empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          8
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          Verifying that client cache entry is no longer valid
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          9
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Update the content of the server’s resource from a CoAP client
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          10
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable GET request to server’s resource so as to check if the resource was updated
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          11
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 1 (GET)</li>
+          <li>Another client-generated Message ID ≠ CMID and ≠ CMID2 (➔ CMID3)</li>
+          <li>Client-generated Token which may or may not be ≠ CTOK or CTOK2 (➔ CTOK3)</li>
+          <li>Option Type = ETag, value = ETAG1 (the ETag value received in step 3)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          12
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.05 (Content)</li>
+          <li>Message ID = CMID3, Token = CTOK3</li>
+          <li>Option type = ETag, value = another ETag value ≠ ETAG1</li>
+          <li>The payload of the requested resource, which should be different from the payload in step 3</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          13
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_22
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform GET transaction with responses containing the ETag option and requests containing the If-Match option (CON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 5.8.1, 5.10.7, 5.10.9, 12.1.12
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Server offers a /validate resource</li>
+          <li>Client &amp; server supports ETag and If-Match option</li>
+          <li>The Client ‘s cache must be purged</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          client gets the resource
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable GET request to server’s resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 1 (GET)</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          <li>No ETag option</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.05 (Content)</li>
+          <li>Message ID = CMID, Token = CTOK</li>
+          <li>Option type = ETag, value = a value chosen by the server (➔ ETAG1)</li>
+          <li>Non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          single update
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable PUT request to server’s resource so as to perform an atomic update
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 3 (PUT)</li>
+          <li>Another client-generated Message ID ≠ CMID (➔ CMID2)</li>
+          <li>Client-generated Token which may or may not be ≠ CTOK (➔ CTOK2)</li>
+          <li>Option type = If-Match, value = ETAG1 (ETag value received in step 3)</li>
+          <li>An arbitrary payload (which differs from the payload received in step 3)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          6
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.04 (Changed)</li>
+          <li>Message ID = CMID2, Token = CTOK2</li>
+          <li>Optional Content-format option</li>
+          <li>Empty or non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          7
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response and the server changed its resource
+        </td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          concurrent updates
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          8
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable GET request to server’s resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          9
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 1 (GET)</li>
+          <li>Another client-generated Message ID ≠ CMID and ≠ CMID2 (➔ CMID3)</li>
+          <li>Client-generated Token which may or may not be ≠ CTOK or CTOK2 (➔ CTOK3)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          10
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.05 (Content)</li>
+          <li>Message ID = CMID3, Token = CTOK3</li>
+          <li>Option type = ETag, value = a value ≠ ETAG1 chosen by the server (➔ ETAG2)</li>
+          <li>The Payload sent in step 5</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          11
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          12
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Update the content of the server’s resource from a CoAP client
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          13
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable PUT request to server’s resource so as to perform an atomic update
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          14
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 3 (PUT)</li>
+          <li>Another client-generated Message ID ≠ CMID, CMID2, CMID3 (➔ CMID4)</li>
+          <li>Client-generated Token which may or may not be ≠ CTOK, CTOK2, CTOK3 (➔ CTOK4)</li>
+          <li>Option type = If-Match, value = ETAG2 (ETag value received in step 10)</li>
+          <li>An arbitrary payload (which differs from the previous payloads)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          15
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 4.12 (Precondition Failed)</li>
+          <li>Message ID = CMID4, Token = CTOK4</li>
+          <li>Optional Content-format option</li>
+          <li>Empty or non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          16
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response and the server did not update the content of the resource
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_23
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform PUT transaction containing the If-None-Match option (CON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 5.8.1, 5.10.7, 5.10.10, 12.1.12
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Server offers a /create1 resource, which does not exist and can be created by the client</li>
+          <li>Client &amp; server support If-Non-Match</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          single creation
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable PUT request to server’s resource so as to atomically create the resource.
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 3 (PUT)</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Client-generated Token (➔ CTOK)</li>
+          <li>Option Type=If-None-Match</li>
+          <li>An arbitrary payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.01 (Created)</li>
+          <li>Message ID = CMID, Token = CTOK</li>
+          <li>Optional Content-format option</li>
+          <li>Empty or non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response and the server created a new resource
+        </td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          concurrent creations
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable PUT request to server’s resource so as to atomically create the resource.
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          6
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 3 (PUT)</li>
+          <li>Another client-generated Message ID ≠ CMID (➔ CMID2)</li>
+          <li>Client-generated Token which may or may not be ≠ CTOK (➔ CTOK2)</li>
+          <li>Option Type=If-None-Match</li>
+          <li>An arbitrary payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          7
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 4.12 (Precondition Failed)</li>
+          <li>Message ID = CMID2, Token = CTOK2</li>
+          <li>Optional Content-format option</li>
+          <li>Empty or non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          8
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,729 @@
+---
+strings:
+  - &CMID Client-generated Message ID (➔ CMID)
+  - &CMID2 Another client-generated Message ID ≠ CMID (➔ CMID2)
+  - &CMID3 Another client-generated Message ID ≠ CMID and ≠ CMID2 (➔ CMID3)
+  - &CMID4 Another client-generated Message ID ≠ CMID, CMID2, CMID3 (➔ CMID4)
+  - &CTOK Client-generated Token (➔ CTOK)
+  - &CTOK2 Client-generated Token which may or may not be ≠ CTOK (➔ CTOK2)
+  - &CTOK3 Client-generated Token which may or may not be ≠ CTOK or CTOK2 (➔ CTOK3)
+  - &CTOK4 Client-generated Token which may or may not be ≠ CTOK, CTOK2, CTOK3 (➔ CTOK4)
+  - &SAME_MID Message ID = CMID
+  - &SAME_MID_TOKEN Message ID = CMID, Token = CTOK
+  - &SAME_MID_TOKEN2 Message ID = CMID2, Token = CTOK2
+  - &SAME_MID_TOKEN3 Message ID = CMID3, Token = CTOK3
+  - &SAME_MID_TOKEN4 Message ID = CMID4, Token = CTOK4
+  - &SMID Server-generated Message ID (➔ SMID)
+  - &SAME_SMID Message ID = SMID
+  - &SAME_TOKEN Token = CTOK
+  - &SETAG Option type = ETag, value = a value chosen by the server (➔ ETAG1)
+  - &SETAG2 Option type = ETag, value = a value ≠ ETAG1 chosen by the server (➔ ETAG2)
+  - &OLP Zero or more Location-path options
+  - &CFO Content-format option
+  - &OCFO Optional Content-format option
+  - &ONEP Empty or non-empty Payload
+  - &NEP Non-empty Payload
+  - &EP Empty Payload
+  - &ACK0S
+    c:
+      - 'Server sends response containing:'
+      - - Type = 2 (ACK)
+        - Code = 0
+        - *SAME_MID
+        - *EP
+  - &ACK0C
+    c:
+      - 'Client sends response containing:'
+      - - Type = 2 (ACK)
+        - Code = 0
+        - *SAME_SMID
+        - *EP
+  - &S205
+    c:
+    - 'Server sends response containing:'
+    - - Code = 2.05 (Content)
+      - *SAME_MID_TOKEN
+      - *CFO
+      - *NEP
+
+TD_COAP_CORE_01:
+  obj: Perform GET transaction (CON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 5.8.1, 1.2, 2.1, 2.2, 3.1"
+  pre: &TEST_GET Server offers the resource /test with resource content is not empty that handles
+    GET with an arbitrary payload
+  seq:
+  - s:
+    - 'Client is requested to send a GET request with:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type=0 and Code=1
+      - *CMID
+      - *CTOK
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 2.05 (Content)
+      - *SAME_MID_TOKEN
+      - *CFO
+      - *NEP
+  - v: Client displays the received information
+TD_COAP_CORE_02:
+  obj: Perform DELETE transaction (CON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 5.8.4, 1.2, 2.1, 2.2, 3.1"
+  pre: Server offers a /test resource that handles DELETE
+  seq:
+  - s:
+    - 'Client is requested to send a DELETE request with:'
+    - - Type = 0 (CON)
+      - Code = 4 (DELETE)
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type=0 and Code=4
+      - *CMID
+      - *CTOK
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 2.02 (Deleted)
+      - *SAME_MID_TOKEN
+      - *OCFO
+      - *ONEP
+  - v: Client displays the received information
+TD_COAP_CORE_03:
+  obj: Perform PUT transaction (CON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 5.8.3, 1.2, 2.1, 2.2, 3.1"
+  pre: Server offers already available resource /test or accepts creation of new
+    resource on /test that handles PUT
+  seq:
+  - s:
+    - 'Client is requested to send a PUT request with:'
+    - - Type = 0 (CON)
+      - Code = 3 (PUT)
+      - *CFO
+      - *ONEP
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type=0 and Code=3
+      - *CMID
+      - *CTOK
+  - v: Server displays received information
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 2.04 (Changed) or 2.01 (Created)
+      - *SAME_MID_TOKEN
+      - *OCFO
+      - *ONEP
+  - v: Client displays the received response
+TD_COAP_CORE_04:
+  obj: Perform POST transaction (CON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 5.8.2, 1.2, 2.1, 2.2, 3.1"
+  pre: Server accepts POST request on /test
+  seq:
+  - s:
+    - 'Client is requested to send a POST request with:'
+    - - Type = 0 (CON)
+      - Code = 2(POST)
+      - *CFO
+      - *ONEP
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type=0 and Code=2
+      - *CMID
+      - *CTOK
+  - v: Server displays received information
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 2.01 (Created) or 2.04 (Changed)
+      - *SAME_MID_TOKEN
+      - *OCFO
+      - *OLP
+      - *ONEP
+  - v: Client displays the received response
+TD_COAP_CORE_05:
+  obj: Perform GET transaction (NON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 5.8.1, 5.2.3"
+  pre: Server offers a /test resource with resource content is not empty that handles GET
+  seq:
+  - s:
+    - 'Client is requested to send a GET request with:'
+    - - Type = 1 (NON)
+      - Code = 1 (GET)
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type=1 and Code=1
+      - *CMID
+      - *CTOK
+  - c:
+    - 'Server sends response containing:'
+    - - Type = 1 (NON)
+      - Code = 2.05 (Content)
+      - *SMID
+      - *SAME_TOKEN
+      - *CFO
+  - v: Client displays the received information
+TD_COAP_CORE_06:
+  obj: Perform DELETE transaction (NON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 5.8.4, 5.2.3"
+  pre: Server offers a /test resource that handles DELETE
+  seq:
+  - s:
+    - 'Client is requested to send a DELETE request with:'
+    - - Type = 1 (NON)
+      - Code = 4 (DELETE)
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type=1 and Code=4
+      - *CMID
+      - *CTOK
+  - c:
+    - 'Server sends response containing:'
+    - - Type = 1 (NON)
+      - Code = 2.02 (Deleted)
+      - *SMID
+      - *SAME_TOKEN
+      - *OCFO
+      - *ONEP
+  - v: Client displays the received information
+TD_COAP_CORE_07:
+  obj: Perform PUT transaction (NON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 5.8.3, 5.2.3"
+  pre: Server offers a /test resource that handles PUT
+  seq:
+  - s:
+    - 'Client is requested to send a PUT request with:'
+    - - Type = 1 (NON)
+      - Code = 3 (PUT)
+      - An arbitrary payload
+      - *CFO
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type=1 and Code=3
+      - *CMID
+      - *CTOK
+  - v: Server displays the received information
+  - c:
+    - 'Server sends response containing:'
+    - - Type = 1 (NON)
+      - Code = 2.04 (Changed) or 2.01 (Created)
+      - *SMID
+      - *SAME_TOKEN
+      - *OCFO
+      - *ONEP
+  - v: Client displays the received response
+TD_COAP_CORE_08:
+  obj: Perform POST transaction (NON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 5.8.2, 5.2.3"
+  pre: Server accepts POST request on /test
+  seq:
+  - s:
+    - 'Client is requested to send a POST request with:'
+    - - Type = 1 (NON)
+      - Code = 2(POST)
+      - An arbitrary payload
+      - *CFO
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type=1 and Code=2
+      - *CMID
+      - *CTOK
+  - v: Server displays the received information
+  - c:
+    - 'Server sends response containing:'
+    - - Type = 1 (NON)
+      - Code = 2.01 (Created) or 2.04 (Changed)
+      - *SMID
+      - *SAME_TOKEN
+      - *OLP
+      - *OCFO
+      - *ONEP
+  - v: Client displays the received response
+TD_COAP_CORE_09:
+  obj: Perform GET transaction with separate response (CON mode, no piggyback)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 5.8.1, 5.2.2"
+  pre: &PRE_SEPARATE Server offers a resource /separate which is not served immediately and which therefore is not acknowledged in a piggybacked way.
+  seq:
+  - s: Client is requested to send a confirmable GET request to server’s resource
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+      - *CMID
+  - *ACK0S
+  - n: Some time (a couple of seconds) elapses.
+  - c:
+    - 'Server sends response containing:'
+    - - Type = 0 (CON)
+      - Code = 2.05 (Content)
+      - *SMID
+      - *SAME_TOKEN
+      - *CFO
+      - *NEP
+  - *ACK0C
+  - v: Client displays the response
+  not: Steps 3 and 4 may occur out-of-order
+TD_COAP_CORE_10:
+  obj: Perform GET transaction containing non-empty Token (CON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 2.2, 5.8.1, 5.10.1"
+  pre: Server offers a /test resource with resource content is not empty that handles
+    GET
+  seq:
+  - s: Client is requested to send a GET request to server’s resource with non-empty Token
+      option
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+      - *CMID
+      - *CTOK
+      - Length of the token should be between 1 to 8 Bytes
+  - *S205
+  - v: Client displays the response
+TD_COAP_CORE_11:
+  obj: Perform GET transaction containing non-empty Token with a separate response (CON
+    mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 2.2, 5.2.2, 5.8.1"
+  pre: *PRE_SEPARATE
+  seq:
+  - s: Client is requested to send a GET request to server’s resource including Token
+      option
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+      - *CMID
+      - *CTOK
+      - Length of the token should be between 1 to 8 Bytes
+  - *ACK0S
+  - n: Some time (a couple of seconds) elapses.
+  - c:
+    - 'Server sends response containing:'
+    - - Type = 0 (CON)
+      - Code = 2.05 (Content)
+      - *SMID
+      - *SAME_TOKEN
+      - *NEP
+  - *ACK0C
+  - v: Client displays the response
+TD_COAP_CORE_12:
+  obj: Perform GET transaction using empty Token (CON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 2.2, 5.8.1, 5.10.1"
+  pre: *TEST_GET
+  seq:
+  - s: 'Client is requested to send a confirmable GET request using zero-length Token
+      to server’s resource '
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+      - Zero-Length Token ➔ CTOK
+  - *S205
+  - v: Client displays the response
+  not: Not all clients may be able to send a zero-length Token
+TD_COAP_CORE_13:
+  obj: Perform GET transaction containing several URI-Path options (CON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 5.4.5, 5.10.2, 6.5"
+  pre: Server offers a /seg1/seg2/seg3 resource with resource content is not empty
+  seq:
+  - s: Client is requested to send a confirmable GET request to server’s resource
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+      - *CMID
+      - *CTOK
+    - 'and three options of type Uri-Path, with the values:'
+    - - seg1
+      - seg2
+      - seg3
+  - *S205
+  - v: Client displays the response
+TD_COAP_CORE_14:
+  obj: Perform GET transaction containing several URI-Query options (CON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 5.4.5, 5.10.2, 6.5"
+  pre: Server offers a /query resource with resource content is not empty
+  seq:
+  - s: Client is requested to send a confirmable GET request with three Query parameters
+      (e.g. ?first=1&second=2&third=3) to the server’s resource
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+      - *CMID
+      - *CTOK
+    - 'and two options of Uri-Query, with values such as:'
+    - - first=1
+      - second=2
+  - *S205
+  - v: Client displays the response
+TD_COAP_CORE_15:
+  obj: Perform GET transaction (CON mode, piggybacked response) in a lossy context
+  cfg: CoAP_CFG_LOSSY
+  ref: "[COAP] 4.4.1, 5.2.1, 5.8.1"
+  pre:
+  - Gateway is introduced and configured to produce packet losses
+  - Server offers a /test resource with resource content is not empty that can handle
+    GET
+  seq:
+  - s: Client is requested to send a confirmable GET request to server’s resource
+  - c:
+    - 'Sent request must contain:'
+    - - Type = 0
+      - Code = 1
+      - *CMID
+      - *CTOK
+  - *S205
+  - v: Client displays the response
+  - c:
+    - 'Repeat steps 1-4 until at least one of the following actions has been observed:'
+    - - One dropped request
+      - One dropped response
+  - v:
+    - 'For each case mentioned in step 5:'
+    - Observe that retransmission is launched
+TD_COAP_CORE_16:
+  obj: Perform GET transaction (CON mode, delayed response) in a lossy context
+  cfg: CoAP_CFG_LOSSY
+  ref: "[COAP] 4.4.1, 5.2.2, 5.8.1"
+  pre:
+  - Gateway is introduced and configured to produce packet losses
+  - *PRE_SEPARATE
+  seq:
+  - s: Client is requested to send a confirmable GET request to server’s resource
+  - c:
+    - 'The requested sent by the client contains:'
+    - - Type = 0
+      - Code = 1
+      - *CMID
+  - *ACK0S
+  - c:
+    - 'Server sends response containing:'
+    - - Type = 0 (CON)
+      - Code = 2.05 (Content)
+      - *SMID
+      - *NEP
+      - *CFO
+  - *ACK0C
+  - v: Client displays the response
+  - c:
+    - 'Repeat steps 1-6 until at least one of the following actions has been observed:'
+    - - One dropped request
+      - One dropped request ACK
+      - One dropped response
+      - One dropped response ACK and its retransmission
+  - v:
+    - 'For each case mentioned in step 7:'
+    - Observe that retransmission is launched
+TD_COAP_CORE_17:
+  obj: Perform GET transaction with a separate response (NON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 2.2, 5.2.2, 5.8.1"
+  pre: *PRE_SEPARATE
+  seq:
+  - s: Client is requested to send a non-confirmable GET request to server’s resource
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 1 (NON)
+      - Code = 1 (GET)
+      - *CMID
+  - c:
+    - 'Server DOES NOT send response containing:'
+    - - Type = 2 (ACK)
+      - Same message ID as in the request in step 2
+      - *EP
+  - n: Some time (a couple of seconds) elapses.
+  - c:
+    - 'Server sends response containing:'
+    - - Type = 1 (NON)
+      - Code = 2.05 (Content)
+      - *SMID
+      - *CFO
+      - *NEP
+  - v: Client displays the response
+TD_COAP_CORE_18:
+  obj: Perform POST transaction with responses containing several Location-Path options
+    (CON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 5.8.1, 5.10.8, 5.9.1.1"
+  pre: Server accepts creation of new resource on /test and the created resource is
+    located at /location1/location2/location3 (resource does not exist yet)
+  seq:
+  - s: Client is requested to send a confirmable POST request to server’s resource
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON
+      - Code = 2 (POST)
+      - An arbitrary payload
+      - Content-format option
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 2.01 (Created)
+    - 'and three options of type Location-Path, with the values (none of which contains a "/"):'
+    - - location1
+      - location2
+      - location3
+  - v: Client displays the response
+TD_COAP_CORE_19:
+  obj: Perform POST transaction with responses containing several Location-Query options
+    (CON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 5.8.1, 5.10.8, 5.9.1.1"
+  pre: Server accepts creation of new resource on uri /location-query, the location
+    of the created resource contains two query parameters ?first=1&second=2
+  seq:
+  - s: Client is requested to send a confirmable POST request to server’s resource
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 2 (POST)
+      - *CMID
+      - *CTOK
+      - *CFO
+      - *ONEP
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 2.01 (Created)
+      - *SAME_MID_TOKEN
+      - *OCFO
+      - *OLP
+      - *ONEP
+    - 'and two options of type Location-Query, with the values (none of which contains a "?" or "&"):'
+    - - first=1
+      - second=2
+  - v: Client displays the response
+TD_COAP_CORE_20:
+  obj: Perform GET transaction containing the Accept option (CON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 5.8.1, 5.10.5, 5.10.4"
+  pre:
+  - 'Server should provide a resource /multi-format which exists in two formats: '
+  - - text/plain;charset=utf-8
+    - application/xml
+  seq:
+  - n: client requests a resource in text format
+  - s: Client is requested to send a confirmable GET request to server’s resource
+  - c:
+    - 'The request sent request by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+      - *CMID
+      - *CTOK
+      - 'Option type = Accept, value = 0 (text/plain;charset=utf-8)'
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 2.05 (Content)
+      - *SAME_MID_TOKEN
+      - Option type = Content-Format, value = 0 (text/plain;charset=utf-8)
+      - Payload = Content of the requested resource in text/plain;charset=utf-8 format
+  - v: Client displays the response
+  - n: client requests a resource in xml format
+  - s: Client is requested to send a confirmable GET request to server’s resource
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+      - *CMID2
+      - *CTOK2
+      - 'Option type = Accept, value = 41 (application/xml)'
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 2.05 (Content)
+      - *SAME_MID_TOKEN2
+      - 'Option type = Content-Format, value = 41 (application/xml)'
+    - Payload = Content of the requested resource in application/xml format
+  - v: Client displays the response
+TD_COAP_CORE_21:
+  obj: Perform GET transaction containing the ETag option (CON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 5.8.1, 5.10.7, 5.10.10, 12.1.12"
+  pre:
+  - Server should offer a /validate resource which may be made to vary over time
+  - Client & server supports ETag option
+  - The Client’s cache must be purged
+  seq:
+  - n: Verifying that client cache is empty
+  - s: Client is requested to send a confirmable GET request to server’s resource
+  - c:
+    - 'The request sent request by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+      - *CMID
+      - *CTOK
+      - No ETag option
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 2.05 (Content)
+      - *SAME_MID_TOKEN
+      - *SETAG
+      - *NEP
+  - v: 'Client displays the response '
+  - n: Verifying client cache entry is still valid
+  - s: Client is requested to send a confirmable GET request to server’s resource
+      so as to check if the resource was updated
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+      - *CMID2
+      - *CTOK2
+      - Option Type = ETag, value = ETAG1 (the ETag value received in step 3)
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 2.03 (Valid)
+      - *SAME_MID_TOKEN2
+      - Option type = ETag, value = ETAG1
+      - *EP
+  - v: 'Client displays the response '
+  - n: Verifying that client cache entry is no longer valid
+  - s: Update the content of the server’s resource from a CoAP client
+  - s: Client is requested to send a confirmable GET request to server’s resource
+      so as to check if the resource was updated
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+      - *CMID3
+      - *CTOK3
+      - Option Type = ETag, value = ETAG1 (the ETag value received in step 3)
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 2.05 (Content)
+      - *SAME_MID_TOKEN3
+      - Option type = ETag, value = another ETag value ≠ ETAG1
+      - The payload of the requested resource, which should be different from the
+        payload in step 3
+  - v: Client displays the response
+TD_COAP_CORE_22:
+  obj: Perform GET transaction with responses containing the ETag option and requests
+    containing the If-Match option (CON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 5.8.1, 5.10.7, 5.10.9, 12.1.12"
+  pre:
+  - Server offers a /validate resource
+  - Client & server supports ETag and If-Match option
+  - The Client ‘s cache must be purged
+  seq:
+  - n: client gets the resource
+  - s: Client is requested to send a confirmable GET request to server’s resource
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+      - *CMID
+      - *CTOK
+      - No ETag option
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 2.05 (Content)
+      - *SAME_MID_TOKEN
+      - *SETAG
+      - *NEP
+  - n: single update
+  - s: Client is requested to send a confirmable PUT request to server’s resource
+      so as to perform an atomic update
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 3 (PUT)
+      - *CMID2
+      - *CTOK2
+      - Option type = If-Match, value = ETAG1 (ETag value received in step 3)
+      - An arbitrary payload (which differs from the payload received in step 3)
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 2.04 (Changed)
+      - *SAME_MID_TOKEN2
+      - *OCFO
+      - *ONEP
+  - v: 'Client displays the response and the server changed its resource '
+  - n: concurrent updates
+  - s: Client is requested to send a confirmable GET request to server’s resource
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+      - *CMID3
+      - *CTOK3
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 2.05 (Content)
+      - *SAME_MID_TOKEN3
+      - *SETAG2
+      - The Payload sent in step 5
+  - v: 'Client displays the response '
+  - s: Update the content of the server’s resource from a CoAP client
+  - s: Client is requested to send a confirmable PUT request to server’s resource
+      so as to perform an atomic update
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 3 (PUT)
+      - *CMID4
+      - *CTOK4
+      - Option type = If-Match, value = ETAG2 (ETag value received in step 10)
+      - An arbitrary payload (which differs from the previous payloads)
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 4.12 (Precondition Failed)
+      - *SAME_MID_TOKEN4
+      - *OCFO
+      - *ONEP
+  - v: Client displays the response and the server did not update the content of the
+      resource
+TD_COAP_CORE_23:
+  obj: Perform PUT transaction containing the If-None-Match option (CON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 5.8.1, 5.10.7, 5.10.10, 12.1.12"
+  pre:
+  - Server offers a /create1 resource, which does not exist and can be created by the client
+  - Client & server support If-Non-Match
+  seq:
+  - n: single creation
+  - s: Client is requested to send a confirmable PUT request to server’s resource
+      so as to atomically create the resource.
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 3 (PUT)
+      - *CMID
+      - *CTOK
+      - Option Type=If-None-Match
+      - An arbitrary payload
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 2.01 (Created)
+      - *SAME_MID_TOKEN
+      - *OCFO
+      - *ONEP
+  - v: Client displays the response and the server created a new resource
+  - n: concurrent creations
+  - s: Client is requested to send a confirmable PUT request to server’s resource
+      so as to atomically create the resource.
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 3 (PUT)
+      - *CMID2
+      - *CTOK2
+      - Option Type=If-None-Match
+      - An arbitrary payload
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 4.12 (Precondition Failed)
+      - *SAME_MID_TOKEN2
+      - *OCFO
+      - *ONEP
+  - v: Client displays the response
