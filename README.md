@@ -9,8 +9,8 @@ For each area of testing, there is a pair of files:
 | ---               | ---                                                                | ---                                                                |
 | Base CoAP         | [base.yml](http://github.com/cabo/td-coap3/blob/master/base.yml)   | [base.html](http://rawgithub.com/cabo/td-coap3/master/base.html)   |
 | Block and Observe | [block.yml](http://github.com/cabo/td-coap3/blob/master/block.yml) | [block.html](http://rawgithub.com/cabo/td-coap3/master/block.html) |
-| Link format       | [link.yml](http://github.com/cabo/td-coap3/blob/master/link.yml) | [link.html](http://rawgithub.com/cabo/td-coap3/master/link.html) |
-| (more to come)    |                                                                    |                                                                    |
+| Link format       | [link.yml](http://github.com/cabo/td-coap3/blob/master/link.yml)   | [link.html](http://rawgithub.com/cabo/td-coap3/master/link.html)   |
+| DTLS              | [dtls.yml](http://github.com/cabo/td-coap3/blob/master/dtls.yml)   | [dtls.html](http://rawgithub.com/cabo/td-coap3/master/dtls.html)   |
 
 In the test descriptions, the following shorthands are used for the references:
 

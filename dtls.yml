@@ -1,0 +1,166 @@
+TD_COAP_DTLS_01:
+  obj: Basic DTLS PSK (success case)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP]"
+  pre:
+  - &PSK Client and server support DTLS PSK with TLS_PSK_WITH_AES_128_CCM_8
+  - &P5684 Server listens for DTLS connections on port 5684
+  - &SESAME Server has been set up to accept PSK "sesame" on PSK identity "password" (ASCII strings without quotes as byte strings)
+  - &SESAME_C Client has been set up to use PSK "sesame" on PSK identity "password"
+  - &TEST_GET Server offers the resource coaps://.../secure with a non-empty representation available upon GET, but only in DTLS-secured connections (coap://.../secure, if available, might lead to 4.01)
+  seq:
+  - s: 'Client is requested to retrieve Server’s resource /secure'
+  - c:
+    - Client opens a DTLS connection to server
+    - cipher_suites in ClientHello contains TLS_PSK_WITH_AES_128_CCM_8
+    - server selects TLS_PSK_WITH_AES_128_CCM_8 in ServerHello
+    - DTLS setup is successful and leads to the exchange of Finished messages
+  - c: Client sends a GET request to Server for /test resource
+  - c:
+    - 'Server sends response containing:'
+    - Code indicating 2.05 (Content)
+    - Payload as set up on the Server
+  - v: Client displays the received information
+TD_COAP_DTLS_02:
+  obj: Basic DTLS PSK (failure case — wrong PSK)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP]"
+  pre:
+  - *PSK
+  - *P5684
+  - *SESAME
+  - Client has been set up to use PSK "wrong" on PSK identity "password"
+  - *TEST_GET
+  seq:
+  - s: 'Client is requested to retrieve Server’s resource /secure'
+  - c:
+    - Client opens a DTLS connection to server
+    - cipher_suites in ClientHello contains TLS_PSK_WITH_AES_128_CCM_8
+    - server selects TLS_PSK_WITH_AES_128_CCM_8 in ServerHello
+    - DTLS setup fails and leads to an Alert message (decrypt_error)
+  - v: Client displays error indication
+TD_COAP_DTLS_03:
+  obj: Lossy DTLS PSK (success case)
+  cfg: CoAP_CFG_LOSSY
+  ref: "[COAP]"
+  pre:
+  - *PSK
+  - *P5684
+  - *SESAME
+  - *SESAME_C
+  - *TEST_GET
+  - &LOSSY Gateway is introduced and configured to produce packet losses
+  seq:
+  - s: 'Client is requested to retrieve Server’s resource /secure'
+  - c:
+    - Client opens a DTLS connection to server
+    - cipher_suites in ClientHello contains TLS_PSK_WITH_AES_128_CCM_8
+    - server selects TLS_PSK_WITH_AES_128_CCM_8 in ServerHello
+    - DTLS setup is successful and leads to the exchange of Finished messages
+  - c: Client sends a GET request to Server for /test resource
+  - c:
+    - 'Server sends response containing:'
+    - Code indicating 2.05 (Content)
+    - Payload as set up on the Server
+  - v: Client displays the received information
+  - s:
+    - 'Repeat steps 1-5 until at least one of each of the DTLS handshake packets in a normal interchange has been lost'
+  - v:
+    - 'For each packet loss case mentioned in step 6:'
+    - Observe that retransmission is launched
+TD_COAP_DTLS_04:
+  obj: Basic DTLS RPK (success case)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP]"
+  pre:
+  - &RPK Client and server support DTLS RPK (using 122 for the client_certificate_type and 123 for the server_certificate_type) with TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8 (using 0xC0 0xAC as the cipher suite identifier)
+  - *P5684
+  - &RPK_C_S Server has been set up to accept a raw public key RPK_C of key type ECDSA defined by the client
+  - &RPK_C_C Client has been set up to use RPK_C as its client_certificate
+  - &RPK_S_C Client has been set up to accept a raw public key RPK_S of key type ECDSA defined by the server
+  - &RPK_S_S Server has been set up to use RPK_S as its server_certificate
+  - *TEST_GET
+  seq:
+  - s: 'Client is requested to retrieve Server’s resource /secure'
+  - c:
+    - Client opens a DTLS connection to server
+    - cipher_suites in ClientHello contains TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8
+    - server selects TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8 in ServerHello
+    - DTLS setup is successful and leads to the exchange of Finished messages
+  - c: Client sends a GET request to Server for /test resource
+  - c:
+    - 'Server sends response containing:'
+    - Code indicating 2.05 (Content)
+    - Payload as set up on the Server
+  - v: Client displays the received information
+TD_COAP_DTLS_05:
+  obj: Basic DTLS RPK (client failure case)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP]"
+  pre:
+  - *RPK
+  - *P5684
+  - *RPK_C_S
+  - *RPK_C_C
+  - Client has *NOT* been set up to accept a raw public key RPK_S of key type ECDSA defined by the server but does require server authentication
+  - *RPK_S_S
+  - *TEST_GET
+  seq:
+  - s: 'Client is requested to retrieve Server’s resource /secure'
+  - c:
+    - Client opens a DTLS connection to server
+    - cipher_suites in ClientHello contains TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8
+    - server selects TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8 in ServerHello
+    - DTLS setup fails and leads to an Alert message (certificate_unknown)
+  - v: Client displays error indication
+TD_COAP_DTLS_06:
+  obj: Basic DTLS RPK (server failure case)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP]"
+  pre:
+  - *RPK
+  - *P5684
+  - Server has *NOT* been set up to accept a raw public key RPK_C of key type ECDSA defined by the client but does require client authentication
+  - *RPK_C_C
+  - *RPK_S_C
+  - *RPK_S_S
+  - *TEST_GET
+  seq:
+  - s: 'Client is requested to retrieve Server’s resource /secure'
+  - c:
+    - Client opens a DTLS connection to server
+    - cipher_suites in ClientHello contains TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8
+    - server selects TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8 in ServerHello
+    - DTLS setup fails and leads to an Alert message (certificate_unknown)
+  - v: Client displays error indication
+TD_COAP_DTLS_07:
+  obj: Lossy DTLS RPK (success case)
+  cfg: CoAP_CFG_LOSSY
+  ref: "[COAP]"
+  pre:
+  - *RPK
+  - *P5684
+  - *RPK_C_S
+  - *RPK_C_C
+  - *RPK_S_C
+  - *RPK_S_S
+  - *TEST_GET
+  - *LOSSY
+  seq:
+  - s: 'Client is requested to retrieve Server’s resource /secure'
+  - c:
+    - Client opens a DTLS connection to server
+    - cipher_suites in ClientHello contains TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8
+    - server selects TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8 in ServerHello
+    - DTLS setup is successful and leads to the exchange of Finished messages
+  - c: Client sends a GET request to Server for /test resource
+  - c:
+    - 'Server sends response containing:'
+    - Code indicating 2.05 (Content)
+    - Payload as set up on the Server
+  - v: Client displays the received information
+  - s:
+    - 'Repeat steps 1-5 until at least one of each of the DTLS handshake packets in a normal interchange has been lost'
+  - v:
+    - 'For each packet loss case mentioned in step 6:'
+    - Observe that retransmission is launched

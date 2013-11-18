@@ -1,0 +1,790 @@
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <style>
+      table {
+        border-collapse: collapse;
+        font-family: Arial, Sans-Serif;
+        margin-bottom: 2em;
+      }
+      table th, table td {
+        min-width: 30px;
+        padding: 4px 0 4px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_DTLS_01
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Basic DTLS PSK (success case)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP]
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client and server support DTLS PSK with TLS_PSK_WITH_AES_128_CCM_8</li>
+          <li>Server listens for DTLS connections on port 5684</li>
+          <li>Server has been set up to accept PSK &quot;sesame&quot; on PSK identity &quot;password&quot; (ASCII strings without quotes as byte strings)</li>
+          <li>Client has been set up to use PSK &quot;sesame&quot; on PSK identity &quot;password&quot;</li>
+          <li>Server offers the resource coaps://.../secure with a non-empty representation available upon GET, but only in DTLS-secured connections (coap://.../secure, if available, might lead to 4.01)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to retrieve Server’s resource /secure
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Client opens a DTLS connection to server</li>
+          <li>cipher_suites in ClientHello contains TLS_PSK_WITH_AES_128_CCM_8</li>
+          <li>server selects TLS_PSK_WITH_AES_128_CCM_8 in ServerHello</li>
+          <li>DTLS setup is successful and leads to the exchange of Finished messages</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends a GET request to Server for /test resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Server sends response containing:</li>
+          <li>Code indicating 2.05 (Content)</li>
+          <li>Payload as set up on the Server</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the received information
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_DTLS_02
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Basic DTLS PSK (failure case — wrong PSK)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP]
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client and server support DTLS PSK with TLS_PSK_WITH_AES_128_CCM_8</li>
+          <li>Server listens for DTLS connections on port 5684</li>
+          <li>Server has been set up to accept PSK &quot;sesame&quot; on PSK identity &quot;password&quot; (ASCII strings without quotes as byte strings)</li>
+          <li>Client has been set up to use PSK &quot;wrong&quot; on PSK identity &quot;password&quot;</li>
+          <li>Server offers the resource coaps://.../secure with a non-empty representation available upon GET, but only in DTLS-secured connections (coap://.../secure, if available, might lead to 4.01)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to retrieve Server’s resource /secure
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Client opens a DTLS connection to server</li>
+          <li>cipher_suites in ClientHello contains TLS_PSK_WITH_AES_128_CCM_8</li>
+          <li>server selects TLS_PSK_WITH_AES_128_CCM_8 in ServerHello</li>
+          <li>DTLS setup fails and leads to an Alert message (decrypt_error)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays error indication
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_DTLS_03
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Lossy DTLS PSK (success case)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_LOSSY
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP]
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client and server support DTLS PSK with TLS_PSK_WITH_AES_128_CCM_8</li>
+          <li>Server listens for DTLS connections on port 5684</li>
+          <li>Server has been set up to accept PSK &quot;sesame&quot; on PSK identity &quot;password&quot; (ASCII strings without quotes as byte strings)</li>
+          <li>Client has been set up to use PSK &quot;sesame&quot; on PSK identity &quot;password&quot;</li>
+          <li>Server offers the resource coaps://.../secure with a non-empty representation available upon GET, but only in DTLS-secured connections (coap://.../secure, if available, might lead to 4.01)</li>
+          <li>Gateway is introduced and configured to produce packet losses</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to retrieve Server’s resource /secure
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Client opens a DTLS connection to server</li>
+          <li>cipher_suites in ClientHello contains TLS_PSK_WITH_AES_128_CCM_8</li>
+          <li>server selects TLS_PSK_WITH_AES_128_CCM_8 in ServerHello</li>
+          <li>DTLS setup is successful and leads to the exchange of Finished messages</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends a GET request to Server for /test resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Server sends response containing:</li>
+          <li>Code indicating 2.05 (Content)</li>
+          <li>Payload as set up on the Server</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the received information
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          6
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Repeat steps 1-5 until at least one of each of the DTLS handshake packets in a normal interchange has been lost
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          7
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          <ul><li>For each packet loss case mentioned in step 6:</li>
+          <li>Observe that retransmission is launched</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_DTLS_04
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Basic DTLS RPK (success case)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP]
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client and server support DTLS RPK (using 122 for the client_certificate_type and 123 for the server_certificate_type) with TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8 (using 0xC0 0xAC as the cipher suite identifier)</li>
+          <li>Server listens for DTLS connections on port 5684</li>
+          <li>Server has been set up to accept a raw public key RPK_C of key type ECDSA defined by the client</li>
+          <li>Client has been set up to use RPK_C as its client_certificate</li>
+          <li>Client has been set up to accept a raw public key RPK_S of key type ECDSA defined by the server</li>
+          <li>Server has been set up to use RPK_S as its server_certificate</li>
+          <li>Server offers the resource coaps://.../secure with a non-empty representation available upon GET, but only in DTLS-secured connections (coap://.../secure, if available, might lead to 4.01)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to retrieve Server’s resource /secure
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Client opens a DTLS connection to server</li>
+          <li>cipher_suites in ClientHello contains TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8</li>
+          <li>server selects TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8 in ServerHello</li>
+          <li>DTLS setup is successful and leads to the exchange of Finished messages</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends a GET request to Server for /test resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Server sends response containing:</li>
+          <li>Code indicating 2.05 (Content)</li>
+          <li>Payload as set up on the Server</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the received information
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_DTLS_05
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Basic DTLS RPK (client failure case)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP]
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client and server support DTLS RPK (using 122 for the client_certificate_type and 123 for the server_certificate_type) with TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8 (using 0xC0 0xAC as the cipher suite identifier)</li>
+          <li>Server listens for DTLS connections on port 5684</li>
+          <li>Server has been set up to accept a raw public key RPK_C of key type ECDSA defined by the client</li>
+          <li>Client has been set up to use RPK_C as its client_certificate</li>
+          <li>Client has *NOT* been set up to accept a raw public key RPK_S of key type ECDSA defined by the server but does require server authentication</li>
+          <li>Server has been set up to use RPK_S as its server_certificate</li>
+          <li>Server offers the resource coaps://.../secure with a non-empty representation available upon GET, but only in DTLS-secured connections (coap://.../secure, if available, might lead to 4.01)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to retrieve Server’s resource /secure
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Client opens a DTLS connection to server</li>
+          <li>cipher_suites in ClientHello contains TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8</li>
+          <li>server selects TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8 in ServerHello</li>
+          <li>DTLS setup fails and leads to an Alert message (certificate_unknown)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays error indication
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_DTLS_06
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Basic DTLS RPK (server failure case)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP]
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client and server support DTLS RPK (using 122 for the client_certificate_type and 123 for the server_certificate_type) with TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8 (using 0xC0 0xAC as the cipher suite identifier)</li>
+          <li>Server listens for DTLS connections on port 5684</li>
+          <li>Server has *NOT* been set up to accept a raw public key RPK_C of key type ECDSA defined by the client but does require client authentication</li>
+          <li>Client has been set up to use RPK_C as its client_certificate</li>
+          <li>Client has been set up to accept a raw public key RPK_S of key type ECDSA defined by the server</li>
+          <li>Server has been set up to use RPK_S as its server_certificate</li>
+          <li>Server offers the resource coaps://.../secure with a non-empty representation available upon GET, but only in DTLS-secured connections (coap://.../secure, if available, might lead to 4.01)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to retrieve Server’s resource /secure
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Client opens a DTLS connection to server</li>
+          <li>cipher_suites in ClientHello contains TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8</li>
+          <li>server selects TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8 in ServerHello</li>
+          <li>DTLS setup fails and leads to an Alert message (certificate_unknown)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays error indication
+        </td>
+      </tr>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_DTLS_07
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Lossy DTLS RPK (success case)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_LOSSY
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP]
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client and server support DTLS RPK (using 122 for the client_certificate_type and 123 for the server_certificate_type) with TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8 (using 0xC0 0xAC as the cipher suite identifier)</li>
+          <li>Server listens for DTLS connections on port 5684</li>
+          <li>Server has been set up to accept a raw public key RPK_C of key type ECDSA defined by the client</li>
+          <li>Client has been set up to use RPK_C as its client_certificate</li>
+          <li>Client has been set up to accept a raw public key RPK_S of key type ECDSA defined by the server</li>
+          <li>Server has been set up to use RPK_S as its server_certificate</li>
+          <li>Server offers the resource coaps://.../secure with a non-empty representation available upon GET, but only in DTLS-secured connections (coap://.../secure, if available, might lead to 4.01)</li>
+          <li>Gateway is introduced and configured to produce packet losses</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to retrieve Server’s resource /secure
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Client opens a DTLS connection to server</li>
+          <li>cipher_suites in ClientHello contains TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8</li>
+          <li>server selects TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8 in ServerHello</li>
+          <li>DTLS setup is successful and leads to the exchange of Finished messages</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends a GET request to Server for /test resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          <ul><li>Server sends response containing:</li>
+          <li>Code indicating 2.05 (Content)</li>
+          <li>Payload as set up on the Server</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the received information
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          6
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Repeat steps 1-5 until at least one of each of the DTLS handshake packets in a normal interchange has been lost
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          7
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          <ul><li>For each packet loss case mentioned in step 6:</li>
+          <li>Observe that retransmission is launched</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
