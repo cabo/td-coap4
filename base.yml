@@ -22,6 +22,7 @@ strings:
   - &CFO Content-format option
   - &OCFO Optional Content-format option
   - &ONEP Empty or non-empty Payload
+  - &CFONE Content-format option if payload non-empty
   - &NEP Non-empty Payload
   - &EP Empty Payload
   - &ACK0S
@@ -88,7 +89,7 @@ TD_COAP_CORE_02:
     - 'Server sends response containing:'
     - - Code = 2.02 (Deleted)
       - *SAME_MID_TOKEN
-      - *OCFO
+      - *CFONE
       - *ONEP
   - v: Client displays the received information
 TD_COAP_CORE_03:
@@ -114,7 +115,7 @@ TD_COAP_CORE_03:
     - 'Server sends response containing:'
     - - Code = 2.04 (Changed) or 2.01 (Created)
       - *SAME_MID_TOKEN
-      - *OCFO
+      - *CFONE
       - *ONEP
   - v: Client displays the received response
 TD_COAP_CORE_04:
@@ -139,7 +140,7 @@ TD_COAP_CORE_04:
     - 'Server sends response containing:'
     - - Code = 2.01 (Created) or 2.04 (Changed)
       - *SAME_MID_TOKEN
-      - *OCFO
+      - *CFONE
       - *OLP
       - *ONEP
   - v: Client displays the received response
@@ -187,7 +188,7 @@ TD_COAP_CORE_06:
       - Code = 2.02 (Deleted)
       - *SMID
       - *SAME_TOKEN
-      - *OCFO
+      - *CFONE
       - *ONEP
   - v: Client displays the received information
 TD_COAP_CORE_07:
@@ -214,7 +215,7 @@ TD_COAP_CORE_07:
       - Code = 2.04 (Changed) or 2.01 (Created)
       - *SMID
       - *SAME_TOKEN
-      - *OCFO
+      - *CFONE
       - *ONEP
   - v: Client displays the received response
 TD_COAP_CORE_08:
@@ -242,7 +243,7 @@ TD_COAP_CORE_08:
       - *SMID
       - *SAME_TOKEN
       - *OLP
-      - *OCFO
+      - *CFONE
       - *ONEP
   - v: Client displays the received response
 TD_COAP_CORE_09:
@@ -497,7 +498,7 @@ TD_COAP_CORE_19:
     - 'Server sends response containing:'
     - - Code = 2.01 (Created)
       - *SAME_MID_TOKEN
-      - *OCFO
+      - *CFONE
       - *OLP
       - *ONEP
     - 'and two options of type Location-Query, with the values (none of which contains a "?" or "&"):'
@@ -646,7 +647,7 @@ TD_COAP_CORE_22:
     - 'Server sends response containing:'
     - - Code = 2.04 (Changed)
       - *SAME_MID_TOKEN2
-      - *OCFO
+      - *CFONE
       - *ONEP
   - v: 'Client displays the response and the server changed its resource '
   - n: concurrent updates
@@ -706,7 +707,7 @@ TD_COAP_CORE_23:
     - 'Server sends response containing:'
     - - Code = 2.01 (Created)
       - *SAME_MID_TOKEN
-      - *OCFO
+      - *CFONE
       - *ONEP
   - v: Client displays the response and the server created a new resource
   - n: concurrent creations

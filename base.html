@@ -192,7 +192,7 @@
         <td>
           Server sends response containing:<ul><li>Code = 2.02 (Deleted)</li>
           <li>Message ID = CMID, Token = CTOK</li>
-          <li>Optional Content-format option</li>
+          <li>Content-format option if payload non-empty</li>
           <li>Empty or non-empty Payload</li>
           </ul>
         </td>
@@ -304,7 +304,7 @@
         <td>
           Server sends response containing:<ul><li>Code = 2.04 (Changed) or 2.01 (Created)</li>
           <li>Message ID = CMID, Token = CTOK</li>
-          <li>Optional Content-format option</li>
+          <li>Content-format option if payload non-empty</li>
           <li>Empty or non-empty Payload</li>
           </ul>
         </td>
@@ -416,7 +416,7 @@
         <td>
           Server sends response containing:<ul><li>Code = 2.01 (Created) or 2.04 (Changed)</li>
           <li>Message ID = CMID, Token = CTOK</li>
-          <li>Optional Content-format option</li>
+          <li>Content-format option if payload non-empty</li>
           <li>Zero or more Location-path options</li>
           <li>Empty or non-empty Payload</li>
           </ul>
@@ -616,7 +616,7 @@
           <li>Code = 2.02 (Deleted)</li>
           <li>Server-generated Message ID (➔ SMID)</li>
           <li>Token = CTOK</li>
-          <li>Optional Content-format option</li>
+          <li>Content-format option if payload non-empty</li>
           <li>Empty or non-empty Payload</li>
           </ul>
         </td>
@@ -730,7 +730,7 @@
           <li>Code = 2.04 (Changed) or 2.01 (Created)</li>
           <li>Server-generated Message ID (➔ SMID)</li>
           <li>Token = CTOK</li>
-          <li>Optional Content-format option</li>
+          <li>Content-format option if payload non-empty</li>
           <li>Empty or non-empty Payload</li>
           </ul>
         </td>
@@ -845,7 +845,7 @@
           <li>Server-generated Message ID (➔ SMID)</li>
           <li>Token = CTOK</li>
           <li>Zero or more Location-path options</li>
-          <li>Optional Content-format option</li>
+          <li>Content-format option if payload non-empty</li>
           <li>Empty or non-empty Payload</li>
           </ul>
         </td>
@@ -2122,7 +2122,7 @@
         <td>
           Server sends response containing:<ul><li>Code = 2.01 (Created)</li>
           <li>Message ID = CMID, Token = CTOK</li>
-          <li>Optional Content-format option</li>
+          <li>Content-format option if payload non-empty</li>
           <li>Zero or more Location-path options</li>
           <li>Empty or non-empty Payload</li>
           </ul>and two options of type Location-Query, with the values (none of which contains a &quot;?&quot; or &quot;&amp;&quot;):<ul><li>first=1</li>
@@ -2690,7 +2690,7 @@
         <td>
           Server sends response containing:<ul><li>Code = 2.04 (Changed)</li>
           <li>Message ID = CMID2, Token = CTOK2</li>
-          <li>Optional Content-format option</li>
+          <li>Content-format option if payload non-empty</li>
           <li>Empty or non-empty Payload</li>
           </ul>
         </td>
@@ -2927,7 +2927,7 @@
         <td>
           Server sends response containing:<ul><li>Code = 2.01 (Created)</li>
           <li>Message ID = CMID, Token = CTOK</li>
-          <li>Optional Content-format option</li>
+          <li>Content-format option if payload non-empty</li>
           <li>Empty or non-empty Payload</li>
           </ul>
         </td>
