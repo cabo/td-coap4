@@ -746,7 +746,7 @@ TD_COAP_CORE_31:
       - No payload
   - c:
     - 'Server sends four-byte RST response containing:'
-    - - Code = 0
+    - - Type=3 and Code=0
       - *SAME_MID
       - Zero-length Token
       - No payload

@@ -680,7 +680,7 @@ TD_COAP_OBS_10:
     - 'Server sends the response containing:'
     - - Type = 2 (ACK)
       - *CONTENT
-      - Content-format of the resource /obs, == f
+      - Content-format of the resource /obs, = f
       - Token value = t2, same as one found in the step 8
       - *DEFNOOBS
   - n: "After some time elapses, the notifications still arrive:"
