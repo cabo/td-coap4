@@ -728,3 +728,26 @@ TD_COAP_CORE_23:
       - *OCFO
       - *ONEP
   - v: Client displays the response
+TD_COAP_CORE_31:
+  obj: Perform CoAP Ping (CON mode)
+  cfg: CoAP_CFG_BASIC
+  ref: "[COAP] 4.3"
+  pre: (Should work with any CoAP server)
+  seq:
+  - s:
+    - 'Client is requested to send a "Ping" request with:'
+    - - Type = 0 (CON)
+      - Code = 0 (empty)
+  - c:
+    - 'The request sent by the client is four bytes and contains:'
+    - - Type=0 and Code=0
+      - *CMID
+      - Zero-length Token
+      - No payload
+  - c:
+    - 'Server sends four-byte RST response containing:'
+    - - Code = 0
+      - *SAME_MID
+      - Zero-length Token
+      - No payload
+  - v: Client displays that the "Ping" was successful

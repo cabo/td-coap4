@@ -1082,6 +1082,181 @@
       <tr>
         <th width='15%'>Identifier:</th>
         <td colspan='3'>
+          TD_COAP_BLOCK_06
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Handle GET blockwise transfer for large resource (early negotiation, 16 byte block size)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [BLOCK] 2.2–2.4
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client supports Block2 transfers</li>
+          <li>Server supports Block2 transfers</li>
+          <li>Server offers a large resource /large</li>
+          <li>Client knows /large requires block transfer</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to retrieve resource /large
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends a GET request. The request contains a Block2 option indicating:<ul><li>NUM = 0;</li>
+          <li>M = 0;</li>
+          <li>SZX (➔DES_SZX) is the desired block size.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends 2.05 (Content) response with a Block2 option indicating:<ul><li>NUM = 0;</li>
+          <li>M = 1;</li>
+          <li>SZX (➔ACT_SZX) is less than or equal to DES_SZX.</li>
+          </ul>Payload size is 2**(SZX+4) bytes.
+        </td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          Start of loop
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client send GET requests for further blocks indicating:<ul><li>NUM = i where “i” is the block number of the current block;</li>
+          <li>M = 0;</li>
+          <li>SZX is ACT_SZX.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends 2.05 (Content) response containing Block2 option indicating:<ul><li>NUM = i where “i” is the block number used at step 4;</li>
+          <li>M = 1;</li>
+          <li>SZX is ACT_SZX.</li>
+          </ul>Payload size is 2**(SZX+4) bytes.
+        </td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          end of loop; final slice:
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          6
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client send GET request for the last block indicating:<ul><li>NUM = n where “n” is the last block number;</li>
+          <li>M = 0;</li>
+          <li>SZX is ACT_SZX.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          7
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends 2.05 (Content) response with a Block2 option indicating:<ul><li>NUM = n where “n” is the block number used at step 6;</li>
+          <li>M = 0;</li>
+          <li>SZX is ACT_SZX.</li>
+          </ul>Payload size is less than or equal to 2**(SZX+4) bytes.
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          8
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the received information (no gaps, right order)
+        </td>
+      </tr>
+      <th>
+        Notes:
+      </th>
+      <td colspan='3'>
+        Steps 4 and 5 are in a loop.
+      </td>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
           TD_COAP_OBS_01
         </td>
       </tr>
@@ -2152,7 +2327,7 @@
           Server sends a notification containing:<ul><li>Type = 0 (CON)</li>
           <li>Code = 4.04 (Not Found)</li>
           <li>Token value = t, same as one found in the step 2</li>
-          <li>Observe option indicating increasing values (sequence number arithmetic modulo 2**24), unless more than 256 seconds elapsed</li>
+          <li>No Observe option any more</li>
           </ul>
         </td>
       </tr>
@@ -2342,7 +2517,7 @@
           Server sends notification containing:<ul><li>Type = 0 (CON)</li>
           <li>Code = 5.00 (Internal Server Error)</li>
           <li>Token value = t, same as one found in the step 2</li>
-          <li>Observe option indicating increasing values (sequence number arithmetic modulo 2**24), unless more than 256 seconds elapsed</li>
+          <li>No Observe option any more</li>
           </ul>
         </td>
       </tr>
@@ -2570,6 +2745,243 @@
         <li>Step 7-9 are asynchronous to the loop 4-6.</li>
         <li>Steps 8-10 are in a loop (the same loop at steps 4-6 but /obs is updated).</li>
         </ul>
+      </td>
+    </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_OBS_10
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          GET does not cancel resource observation
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [OBSERVE] 1.2, 3, 4
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          <ul><li>Client supports Observe option</li>
+          <li>Server supports Observe option</li>
+          <li>Server offers an observable resource /obs which changes periodically (e.g. every 5s) which produces confirmable notifications</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send to the server a confirmable GET request with observe option for resource /obs
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 1 (GET)</li>
+          <li>Token value ➔ t, a value generated by the client</li>
+          <li>Observe option = empty</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends the response containing:<ul><li>Type = 2 (ACK)</li>
+          <li>Code = 2.05 (Content)</li>
+          <li>Content-format of the resource /obs, ➔ f</li>
+          <li>Token value = t, same as one found in the step 2</li>
+          <li>Observe option with a sequence number</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          After some time elapses, repeatedly:
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends a notification containing:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 2.05 (Content)</li>
+          <li>Content-format = f, same as one found in the step 3</li>
+          <li>Token value = t, same as one found in the step 3</li>
+          <li>Observe option indicating increasing values (sequence number arithmetic modulo 2**24), unless more than 256 seconds elapsed</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          5
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends an ACK
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          6
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the received information
+        </td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          Perform an unrelated GET
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          7
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send to the server a confirmable GET request *without* observe option for resource /obs
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          8
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 1 (GET)</li>
+          <li>Token value ➔ t2, a value generated by the client ≠ t</li>
+          <li>*No* Observe option</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          9
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends the response containing:<ul><li>Type = 2 (ACK)</li>
+          <li>Code = 2.05 (Content)</li>
+          <li>Content-format of the resource /obs, == f</li>
+          <li>Token value = t2, same as one found in the step 8</li>
+          <li>*No* Observe option</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th colspan='4'>
+          After some time elapses, the notifications still arrive:
+        </th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          10
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends a notification containing:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 2.05 (Content)</li>
+          <li>Content-format = f, same as one found in the step 3</li>
+          <li>Token value = t, same as one found in the step 3</li>
+          <li>Observe option indicating increasing values (sequence number arithmetic modulo 2**24), unless more than 256 seconds elapsed</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          11
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Client sends an ACK
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          12
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the received information
+        </td>
+      </tr>
+      <th>
+        Notes:
+      </th>
+      <td colspan='3'>
+        Steps 4-6 and 10-12 are in a loop.
       </td>
     </table>
   </body>

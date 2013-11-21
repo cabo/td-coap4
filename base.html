@@ -3008,5 +3008,104 @@
         </td>
       </tr>
     </table>
+    <table border='1' width='100%'>
+      <tr>
+        <th colspan='4'>Interoperability Test Description</th>
+      </tr>
+      <tr>
+        <th width='15%'>Identifier:</th>
+        <td colspan='3'>
+          TD_COAP_CORE_31
+        </td>
+      </tr>
+      <tr>
+        <th>Objective:</th>
+        <td colspan='3'>
+          Perform CoAP Ping (CON mode)
+        </td>
+      </tr>
+      <tr>
+        <th>Configuration:</th>
+        <td colspan='3'>
+          CoAP_CFG_BASIC
+        </td>
+      </tr>
+      <tr>
+        <th>References:</th>
+        <td colspan='3'>
+          [COAP] 4.3
+        </td>
+      </tr>
+      <tr>
+        <th>Pre-test conditions:</th>
+        <td colspan='3'>
+          (Should work with any CoAP server)
+        </td>
+      </tr>
+      <tr>
+        <th>Test Sequence:</th>
+        <td width='10 %'>Step</td>
+        <td width='15 %'>Type</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          1
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a &quot;Ping&quot; request with:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 0 (empty)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          2
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          The request sent by the client is four bytes and contains:<ul><li>Type=0 and Code=0</li>
+          <li>Client-generated Message ID (➔ CMID)</li>
+          <li>Zero-length Token</li>
+          <li>No payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          3
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends four-byte RST response containing:<ul><li>Code = 0</li>
+          <li>Message ID = CMID</li>
+          <li>Zero-length Token</li>
+          <li>No payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          4
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays that the &quot;Ping&quot; was successful
+        </td>
+      </tr>
+    </table>
   </body>
 </html>
