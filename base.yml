@@ -425,9 +425,12 @@ TD_COAP_CORE_16:
       - One dropped request ACK
       - One dropped response
       - One dropped response ACK and its retransmission
-  - v:
+  - c:
     - 'For each case mentioned in step 7:'
     - Observe that retransmission is launched
+  - c:
+    - 'For the dropped request ACK case:'
+    - Check that retransmission is also stopped by the arrival of the CON response
 TD_COAP_CORE_17:
   obj: Perform GET transaction with a separate response (NON mode)
   cfg: CoAP_CFG_BASIC
