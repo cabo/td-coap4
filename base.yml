@@ -668,9 +668,23 @@ TD_COAP_CORE_22:
       - *SETAG2
       - The Payload sent in step 5
   - v: 'Client displays the response '
-  - s: Update the content of the server’s resource from a CoAP client
+  - s: Update the content of the server’s resource from a CoAP client once more
+  - c:
+    - 'The request sent by the client contains:'
+    - - Type = 0 (CON)
+      - Code = 3 (PUT)
+      - *CMID4
+      - *CTOK4
+      - An arbitrary payload (which differs from the payloads received in steps 3 and 10)
+  - c:
+    - 'Server sends response containing:'
+    - - Code = 2.04 (Changed)
+      - *SAME_MID_TOKEN4
+      - *CFONE
+      - *ONEP
+  - v: 'Client displays the response and the server changed its resource '
   - s: Client is requested to send a confirmable PUT request to server’s resource
-      so as to perform an atomic update
+      so as to perform an atomic update, assuming it is still unchanged from step 10
   - c:
     - 'The request sent by the client contains:'
     - - Type = 0 (CON)

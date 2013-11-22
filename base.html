@@ -2791,7 +2791,7 @@
           Stimulus
         </td>
         <td>
-          Update the content of the server’s resource from a CoAP client
+          Update the content of the server’s resource from a CoAP client once more
         </td>
       </tr>
       <tr>
@@ -2800,16 +2800,61 @@
           13
         </td>
         <td>
-          Stimulus
+          Check
         </td>
         <td>
-          Client is requested to send a confirmable PUT request to server’s resource so as to perform an atomic update
+          The request sent by the client contains:<ul><li>Type = 0 (CON)</li>
+          <li>Code = 3 (PUT)</li>
+          <li>Another client-generated Message ID ≠ CMID, CMID2, CMID3 (➔ CMID4)</li>
+          <li>Client-generated Token which may or may not be ≠ CTOK, CTOK2, CTOK3 (➔ CTOK4)</li>
+          <li>An arbitrary payload (which differs from the payloads received in steps 3 and 10)</li>
+          </ul>
         </td>
       </tr>
       <tr>
         <td></td>
         <td>
           14
+        </td>
+        <td>
+          Check
+        </td>
+        <td>
+          Server sends response containing:<ul><li>Code = 2.04 (Changed)</li>
+          <li>Message ID = CMID4, Token = CTOK4</li>
+          <li>Content-format option if payload non-empty</li>
+          <li>Empty or non-empty Payload</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          15
+        </td>
+        <td>
+          Verify
+        </td>
+        <td>
+          Client displays the response and the server changed its resource
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          16
+        </td>
+        <td>
+          Stimulus
+        </td>
+        <td>
+          Client is requested to send a confirmable PUT request to server’s resource so as to perform an atomic update, assuming it is still unchanged from step 10
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          17
         </td>
         <td>
           Check
@@ -2827,7 +2872,7 @@
       <tr>
         <td></td>
         <td>
-          15
+          18
         </td>
         <td>
           Check
@@ -2843,7 +2888,7 @@
       <tr>
         <td></td>
         <td>
-          16
+          19
         </td>
         <td>
           Verify
