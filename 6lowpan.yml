@@ -1,0 +1,816 @@
+strings:
+  - &nohc Header compression is disabled on both EUT1 and EUT2
+  - &hc Header compression is enabled on both EUT1 and EUT2
+  - &e64 EUT1 and EUT2 are configured to use EUI-64
+  - &e16 EUT1 and EUT2 are configured to use 16-bit short address
+  - &e6416 EUT1 is configured to use EUI-64 and EUT2 is configured to use 16-bit short address
+  - &e1664 EUT1 is configured to use 16-bit short address and EUT2 is configured to use EUI-64
+  - &h64 EUT1 and EUT2 are configured with a default hop limit of 64
+  - &h63 EUT1 and EUT2 are configured with a default hop limit of 63
+  - &nn Node-Node
+  - &hr Host-6LR
+  - &hchr Header compression is enabled on both Host and Router
+  - &coaping A CoAP ping server is installed on port 5683 of the host
+  - &coaping6 A CoAP ping server is installed on port 61616 of the host
+  - &host64 Host is configured to use EUI-64 address
+  - &host16 Host is configured to use 16-bit address
+  - &registered Host is up and registered its global address with the Router
+  - &hl10 In IP_HC, HLIM (HL) is 10 and the hop limit field is compressed away
+  - &hl00 In IP_HC, HLIM (HL) is 00 and the hop limit field is carried in-line
+  - &replyhl The Echo Reply message might use a different hop limit in some implementations, then the HLIM value might also be different.
+
+
+
+TD_6LoWPAN_FORMAT_01:
+  obj: Check that EUTs correctly handle uncompressed 6LoWPAN packets (EUI-64 link-local)
+  cfg: *nn
+  ref: RFC 4944 5.1, 8; RFC 6775 5.6
+  pre:
+    - *nohc
+    - *e64
+  seq:
+    - s:
+      - EUT1 initiates an echo request to EUT2's link-local address
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+    - c:
+      - EUT1 sends an uncompressed 6LoWPAN packet containing the Echo Request message to EUT2's link-local address
+      - Dispatch value in 6LowPAN packet is “01000001”
+      - Both source and destination addresses are EUI-64 link-local
+    - v: EUT2 receives the Echo Request message  from EUT1
+    - c:
+      - EUT2 sends an uncompressed 6LoWPAN packet containing the Echo Reply message to EUT1's link-local address
+      - Dispatch value in 6LowPAN packet is “01000001”
+      - Both source and destination addresses are EUI-64 link-local
+    - v: EUT1 receives the Echo Reply message from EUT2
+    - c: The data received in the echo reply message is identical to that sent in EUT1's echo request message
+
+TD_6LoWPAN_FORMAT_07:
+  obj: Check that EUTs correctly handle uncompressed 6LoWPAN packets (EUI-64 to 16-bit link-local)
+  cfg: *nn
+  ref: RFC 4944 5.1, 8; RFC 6775 5.6
+  pre:
+    - *nohc
+    - *e6416
+  seq:
+    - s:
+      - EUT1 initiates an echo request to EUT2's link-local address
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+    - c:
+      - EUT1 sends an uncompressed 6LoWPAN packet containing the Echo Request message to EUT2's link-local address
+      - Dispatch value in 6LowPAN packet is “01000001”
+      - Source address is EUI-64 link-local
+      - Destination address is 16 bit short link-local
+    - v: EUT2 receives the Echo Request message  from EUT1
+    - c:
+      - EUT2 sends an uncompressed 6LoWPAN packet containing the Echo Reply message to EUT1's link-local address
+      - Dispatch value in 6LowPAN packet is “01000001”
+      - Source address is 16 bit short link-local
+      - Destination address is EUI-64 link-local
+    - v: EUT1 receives the Echo Reply message from EUT2
+    - c: The data received in the echo reply message is identical to that sent in EUT1's echo request message
+
+TD_6LoWPAN_FORMAT_06:
+  obj: Check that EUTs correctly handle uncompressed 6LoWPAN multicast to all-nodes (EUI-64 link-local)
+  cfg: *nn
+  ref: RFC 4944 5.1, 8; RFC 6775 5.6
+  pre:
+    - *nohc
+    - *e64
+  seq:
+    - s: EUT1 initiates an echo request to the link-local all-nodes multicast address (FF02::1)  (ICMP payload = 4 bytes, total IPv6 size 52 bytes)
+    - c: EUT1 sends an uncompressed 6LoWPAN packet containing the Echo Request message to EUT2
+    - c: Dispatch value in 6LowPAN packet is “01000001”
+    - v: EUT2 receives the Echo Request message  from EUT1
+    - c: EUT2 sends an uncompressed 6LoWPAN packet containing the Echo Reply message to EUT1
+    - c: Dispatch value in 6LowPAN packet is “01000001”
+    - v: EUT1 receives the Echo Reply message from EUT2
+    - c: The data in the echo reply message is identical to that in the echo request message
+
+      
+TD_6LoWPAN_ND_01:
+  obj: Check that a host is able to register its global IPv6 address (EUI-64)
+  cfg: *hr
+  ref: RFC 6775 10.2
+  pre: &prend01
+    - *hchr
+    - Host is configured to use EUI-64 address
+  seq:
+    - s: Initialize the network interface of the Host
+    - c: The Host sends a Router Solicitation to all-routers multicast address with SLLAO (EUI-64). Source = link local based on EUI-64
+    - v: The Router receives the Router Solicitation from the host.
+    - c:
+      - The Router sends a unicast Router Advertisement containing PIO and optionally 6COs to the host.
+      - Link local addresses are used.
+      - The L bit is not set.
+    - v: The host receives the Router Advertisement from the router
+    - c: The host configures its tentative global IPv6 address based on the PIO information in RA from the Router (EUI-64)
+    - c: The host registers its tentative address by sending a unicast Neighbor Solicitation containing ARO and SLLAO. Source = GP64
+    - v: The Router receives the Neighbor Solicitation from the host.
+    - c: The Router sends a Neighbor Advertisement with Status set to 0 (Dest = GP64)
+    - v: The host updates the status of the tentative address
+    - s:
+      - The Router initiates an echo request to the Host's new global address, using its own global address as the source
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+      - Hop Limit is 64, no traffic class or flow label is being used
+    - c: The Router sends a 6LoWPAN packet containing the Echo Request message to the Host
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - v: The Host receives the Echo Request message from the Router
+    - c: The Host sends a 6LoWPAN packet containing the Echo Reply message to the Router
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - v: The Router receives the Echo Reply message from the Host
+  not: *replyhl
+
+TD_6LoWPAN_ND_06:
+  obj: Check host behavior under multiple prefixes (EUI-64)
+  cfg: *hr
+  ref: RFC 4861 3.1
+  pre:
+    - *hchr
+    - Host is configured to use EUI-64 address
+    - Router is configured with multiple prefixes
+  seq:
+    - s: Initialize the network interface of the Host
+    - c: The Host sends a Router Solicitation to all-routers multicast address with SLLAO (EUI-64). Source = link local based on EUI-64
+    - v: The Router receives the Router Solicitation from the host.
+    - c:
+      - The Router sends a unicast Router Advertisement containing PIO with multiple prefixes and optionally 6COs to the host.
+      - Link local addresses are used.
+      - The L bit is not set.
+    - v: The host receives the Router Advertisement from the router
+    - c: The host configures a number of tentative global IPv6 address based on the PIO information in RA from the Router (EUI-64)
+    - c: The host registers its tentative addresses by sending unicast Neighbor Solicitations containing ARO and SLLAO. Source = GP64
+    - v: The Router receives the Neighbor Solicitations from the host.
+    - c: The Router sends Neighbor Advertisements with Status set to 0 (Dest = GP64)
+    - v: The host updates the status of the tentative addresses
+    - s:
+      - The Router initiates an echo request to one of the Host's new global addresses, using the appropriate own global address as the source
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+      - Hop Limit is 64, no traffic class or flow label is being used
+    - c: The Router sends a 6LoWPAN packet containing the Echo Request message to the Host
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - v: The Host receives the Echo Request message from the Router
+    - c: The Host sends a 6LoWPAN packet containing the Echo Reply message to the Router
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - v: The Router receives the Echo Reply message from the Host
+  not:
+    - Optional, as not all 6lrs and hosts allow multiple prefixes
+    - *replyhl
+
+
+
+TD_6LoWPAN_HC_01:
+  obj: Check that EUTs correctly handle compressed 6LoWPAN packets (EUI-64 link-local, hop limit=64)
+  cfg: *nn
+  ref: RFC 6282 section 3; RFC 6775 5.6
+  pre:
+    - *hc
+    - *e64
+    - *h64
+  seq:
+    - s:
+      - EUT1 initiates an echo request to EUT2's link-local address
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+      - Hop Limit is 64, no traffic class or flow label is being used
+    - c: EUT1 sends a compressed 6LoWPAN packet containing the Echo Request message to EUT2
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - f: In IP_HC, SAC=0, SAM=11; DAC=0; DAM=11
+    - v: EUT2 receives the Echo Request message from EUT1
+    - c: EUT2 sends a compressed 6LoWPAN packet containing the Echo Reply message to EUT1
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - f: In IP_HC, SAC=0, SAM=11; DAC=0; DAM=11
+    - v: EUT1 receives the Echo Reply message from EUT2
+  not:
+    - The feature tests check that best compression is used (but this is not a requirement for interoperability)
+    - *replyhl
+
+  
+
+TD_6LoWPAN_HC_03:
+  obj: Check that EUTs correctly handle compressed 6LoWPAN packets (EUI-64 link-local, hop limit=63)
+  cfg: *nn
+  ref: RFC 6282 section 3; RFC 6775 5.6
+  pre:
+    - *hc
+    - *e64
+    - *h63
+  seq:
+    - s:
+      - EUT1 initiates an echo request to EUT2's link-local address
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+      - Hop Limit is 63, no traffic class or flow label is being used
+    - c: EUT1 sends a compressed 6LoWPAN packet containing the Echo Request message to EUT2
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl00
+    - f: In IP_HC, SAC=0, SAM=11; DAC=0; DAM=11
+    - v: EUT2 receives the Echo Request message from EUT1
+    - c: EUT2 sends a compressed 6LoWPAN packet containing the Echo Reply message to EUT1
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl00
+    - f: In IP_HC, SAC=0, SAM=11; DAC=0; DAM=11
+    - v: EUT1 receives the Echo Reply message from EUT2
+  not:
+    - The feature tests check that best compression is used (but this is not a requirement for interoperability)
+    - *replyhl
+
+  
+
+  
+TD_6LoWPAN_HC_09:
+  obj: Check that EUTs correctly handle compressed 6LoWPAN packets (EUI-64 to 16-bit link-local, hop limit=64)
+  cfg: *nn
+  ref: RFC 6282 section 3; RFC 6775 5.6
+  pre:
+    - *hc
+    - *e6416
+  seq:
+    - s:
+      - EUT1 initiates an echo request to EUT2's link-local address
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+      - Hop Limit is 64, no traffic class or flow label is being used
+    - c: EUT1 sends a compressed 6LoWPAN packet containing the Echo Request message to EUT2
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - f: In IP_HC, SAC=0, SAM=11; DAC=0; DAM=11
+    - v: EUT2 receives the Echo Request message from EUT1
+    - c: EUT2 sends a compressed 6LoWPAN packet containing the Echo Reply message to EUT1
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - f: In IP_HC, SAC=0, SAM=11; DAC=0; DAM=11
+    - v: EUT1 receives the Echo Reply message from EUT2
+  not:
+    - The feature tests check that best compression is used (but this is not a requirement for interoperability)
+    - *replyhl
+
+
+
+
+TD_6LoWPAN_HC_05:
+  obj: Check that EUTs correctly handle compressed UDP packets (EUI-64, server port 5683)
+  cfg: *hr
+  ref: RFC 6282, 4.3
+  pre:
+    - *hchr
+    - *host64
+    - *coaping
+  seq:
+    - s:
+      - 6LR initiates a CoAP Ping request to Host's CoAP Ping server
+    - c: 6LR sends a 6LoWPAN packet containing the CoAP Ping message to Host
+    - f: NH is set, NHC is 111100x0, the source port is compressed to 8 bits (x=1) or uncompressed (x=0), the destination port is uncompressed 5683
+    - v: Host receives the CoAP Ping message from 6LR
+    - c: Host sends a 6LoWPAN packet containing the CoAP Reset message to 6LR
+    - f: NH is set, NHC is 1111000x, the source port is uncompressed 5683, the destination port is compressed to 8 bits (x=1) or uncompressed (x=0)
+    - v: 6LR receives the CoAP Reset message from Host
+  not: The feature tests check that best compression is used (but this is not a requirement for interoperability)
+
+  
+
+
+TD_6LoWPAN_HC_07:
+  obj: Check that EUTs correctly handle compressed UDP packets (EUI-64, server port 61616)
+  cfg: *hr
+  ref: RFC 6282, 4.3
+  pre:
+    - *hchr
+    - *host64
+    - *coaping6
+  seq:
+    - s:
+      - 6LR initiates a CoAP Ping request to Host's CoAP Ping server
+    - c: 6LR sends a 6LoWPAN packet containing the CoAP Ping message to Host
+    - f: NH is set, NHC is 111100x1, the destination port is compressed to 4 bits of 0000 (x=1) or 8 bits of 0xb0 (x=0)
+    - v: Host receives the CoAP Ping message from 6LR
+    - c: Host sends a 6LoWPAN packet containing the CoAP Reset message to 6LR
+    - f: NH is set, NHC is 1111001x, the source port is compressed to 4 bits of 0000 (x=1) or 8 bits of 0xb0 (x=0)
+    - v: 6LR receives the CoAP Reset message from Host
+  not: The feature tests check that best compression is used (but this is not a requirement for interoperability)
+
+  
+
+TD_6LoWPAN_ND_HC_01:
+  obj: Check that EUTs make use of context 0 (EUI-64)
+  cfg: *hr
+  ref: RFC 6775 5.4, RFC 6282 3.1.1
+  pre:
+    - *hc
+    - *e64
+    - *h64
+  seq:
+    - s: Host is set up with 6LR and receives context 0 for the global prefix
+    - s:
+      - EUT1 initiates an echo request to EUT2's GP64 address
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+      - Hop Limit is 64, no traffic class or flow label is being used
+    - c: EUT1 sends a 6LoWPAN packet containing the Echo Request message to EUT2
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - f: The compression makes use of the global prefix (SAC/DAC = 1, SAM/DAM=01/11)
+    - f: The context identifier extension is not present (CID = 0)
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - v: EUT2 receives the Echo Request message from EUT1
+    - c: EUT2 sends a compressed 6LoWPAN packet containing the Echo Reply message to EUT1
+    - f: *hl10
+    - f: The compression makes use of the global prefix (SAC/DAC = 1, SAM/DAM=01/11)
+    - f: The context identifier extension is not present (CID = 0)
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+  not:
+    - The feature tests check that good compression is used (but this is not a requirement for interoperability)
+    - *replyhl
+
+TD_6LoWPAN_ND_HC_03:
+  obj: Check that EUTs make use of context ≠ 0 (EUI-64)
+  cfg: *hr
+  ref: RFC 6775 5.4, RFC 6282 3.1.2
+  pre:
+    - *hc
+    - *e64
+    - *h64
+  seq:
+    - s: Host is set up with 6LR and receives context ≠ 0 for the global prefix
+    - s:
+      - EUT1 initiates an echo request to EUT2's GP64 address
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+      - Hop Limit is 64, no traffic class or flow label is being used
+    - c: EUT1 sends a 6LoWPAN packet containing the Echo Request message to EUT2
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - f: The compression makes use of the global prefix (SAC/DAC = 1, SAM/DAM=01/11)
+    - c: A Context Identifier Extension (CID) is used for this
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - v: EUT2 receives the Echo Request message from EUT1
+    - c: EUT2 sends a compressed 6LoWPAN packet containing the Echo Reply message to EUT1
+    - f: *hl10
+    - f: The compression makes use of the global prefix (SAC/DAC = 1, SAM/DAM=01/11)
+    - c: A Context Identifier Extension (CID) is used for this
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+  not:
+    - The feature tests check that good compression is used (but this is not a requirement for interoperability)
+    - *replyhl
+
+
+
+TD_6LoWPAN_FORMAT_02:
+  obj: Check that EUTs correctly handle uncompressed 6LoWPAN packets (16-bit link-local)
+  cfg: *nn
+  ref: RFC 4944 5.1, 8; RFC 6775 5.6
+  pre:
+    - *nohc
+    - *e16
+  seq:
+    - s:
+      - EUT1 initiates an echo request to EUT2's link-local address
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+    - c:
+      - EUT1 sends an uncompressed 6LoWPAN packet containing the Echo Request message to EUT2's link-local address
+      - Dispatch value in 6LowPAN packet is “01000001”
+      - Both source and destination addresses are 16 bit short link-local
+    - v: EUT2 receives the Echo Request message  from EUT1
+    - c:
+      - EUT2 sends an uncompressed 6LoWPAN packet containing the Echo Reply message to EUT1's link-local address
+      - Dispatch value in 6LowPAN packet is “01000001”
+      - Both source and destination addresses are 16 bit short link-local
+    - v: EUT1 receives the Echo Reply message from EUT2
+    - c: The data received in the echo reply message is identical to that sent in EUT1's echo request message
+
+TD_6LoWPAN_FORMAT_08:
+  obj: Check that EUTs correctly handle uncompressed 6LoWPAN packets (16-bit to EUI-64 link-local)
+  cfg: *nn
+  ref: RFC 4944 5.1, 8; RFC 6775 5.6
+  pre:
+    - *nohc
+    - *e1664
+  seq:
+    - s:
+      - EUT1 initiates an echo request to EUT2's link-local address
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+    - c:
+      - EUT1 sends an uncompressed 6LoWPAN packet containing the Echo Request message to EUT2's link-local address
+      - Dispatch value in 6LowPAN packet is “01000001”
+      - Source address is 16 bit short link-local
+      - Destination address is EUI-64 link-local
+    - v: EUT2 receives the Echo Request message  from EUT1
+    - c:
+      - EUT2 sends an uncompressed 6LoWPAN packet containing the Echo Reply message to EUT1's link-local address
+      - Dispatch value in 6LowPAN packet is “01000001”
+      - Source address is EUI-64 link-local
+      - Destination address is 16 bit short link-local
+    - v: EUT1 receives the Echo Reply message from EUT2
+    - c: The data received in the echo reply message is identical to that sent in EUT1's echo request message
+
+TD_6LoWPAN_FORMAT_05:
+  obj: Check that EUTs correctly handle uncompressed 6LoWPAN multicast to all-nodes (16-bit link-local)
+  cfg: *nn
+  ref: RFC 4944 5.1, 8; RFC 6775 5.6
+  pre:
+    - *nohc
+    - *e16
+  seq:
+    - s: EUT1 initiates an echo request to the link-local all-nodes multicast address (FF02::1)  (ICMP payload = 4 bytes, total IPv6 size 52 bytes)
+    - c: EUT1 sends an uncompressed 6LoWPAN packet containing the Echo Request message to EUT2
+    - c: Dispatch value in 6LowPAN packet is “01000001”
+    - v: EUT2 receives the Echo Request message  from EUT1
+    - c: EUT2 sends an uncompressed 6LoWPAN packet containing the Echo Reply message to EUT1
+    - c: Dispatch value in 6LowPAN packet is “01000001”
+    - v: EUT1 receives the Echo Reply message from EUT2
+    - c: The data in the echo reply message is identical to that in the echo request message
+
+      
+TD_6LoWPAN_ND_02:
+  obj: Check that a host is able to register its global IPv6 address (16-bit)
+  cfg: *hr
+  ref: RFC 6775 10.2
+  pre: &prend01
+    - *hchr
+    - Host is configured to use 16 bit short address
+  seq:
+    - s: Initialize the network interface of the Host
+    - c: The Host sends a Router Solicitation to all-routers multicast address with SLLAO (EUI-64). Source = link local based on EUI-64
+    - v: The Router receives the Router Solicitation from the host.
+    - c:
+      - The Router sends a unicast Router Advertisement containing PIO and optionally 6COs to the host.
+      - Link local addresses are used.
+      - The L bit is not set.
+    - v: The host receives the Router Advertisement from the router
+    - c: The host configures its tentative global IPv6 address based on the PIO information in RA from the Router (16-bit)
+    - c: The host registers its tentative address by sending a unicast Neighbor Solicitation containing ARO and SLLAO. Source = GP16
+    - v: The Router receives the Neighbor Solicitation from the host.
+    - c: The Router sends a Neighbor Advertisement with Status set to 0 (Dest = GP16)
+    - v: The host updates the status of the tentative address
+    - s:
+      - The Router initiates an echo request to the Host's new global address, using its own global address as the source
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+      - Hop Limit is 64, no traffic class or flow label is being used
+    - c: The Router sends a 6LoWPAN packet containing the Echo Request message to the Host
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - v: The Host receives the Echo Request message from the Router
+    - c: The Host sends a 6LoWPAN packet containing the Echo Reply message to the Router
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - v: The Router receives the Echo Reply message from the Host
+  not: *replyhl
+
+TD_6LoWPAN_ND_07:
+  obj: Check host behavior under multiple prefixes (16-bit)
+  cfg: *hr
+  ref: RFC 4861 3.1
+  pre:
+    - *hchr
+    - Host is configured to use 16 bit short address
+    - Router is configured with multiple prefixes
+  seq:
+    - s: Initialize the network interface of the Host
+    - c: The Host sends a Router Solicitation to all-routers multicast address with SLLAO (EUI-64). Source = link local based on EUI-64
+    - v: The Router receives the Router Solicitation from the host.
+    - c:
+      - The Router sends a unicast Router Advertisement containing PIO with multiple prefixes and optionally 6COs to the host.
+      - Link local addresses are used.
+      - The L bit is not set.
+    - v: The host receives the Router Advertisement from the router
+    - c: The host configures a number of tentative global IPv6 address based on the PIO information in RA from the Router (16-bit)
+    - c: The host registers its tentative addresses by sending unicast Neighbor Solicitations containing ARO and SLLAO. Source = GP16
+    - v: The Router receives the Neighbor Solicitations from the host.
+    - c: The Router sends Neighbor Advertisements with Status set to 0 (Dest = GP16)
+    - v: The host updates the status of the tentative addresses
+    - s:
+      - The Router initiates an echo request to one of the Host's new global addresses, using the appropriate own global address as the source
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+      - Hop Limit is 64, no traffic class or flow label is being used
+    - c: The Router sends a 6LoWPAN packet containing the Echo Request message to the Host
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - v: The Host receives the Echo Request message from the Router
+    - c: The Host sends a 6LoWPAN packet containing the Echo Reply message to the Router
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - v: The Router receives the Echo Reply message from the Host
+  not:
+    - Optional, as not all 6lrs and hosts allow multiple prefixes
+    - *replyhl
+
+
+
+TD_6LoWPAN_HC_02:
+  obj: Check that EUTs correctly handle compressed 6LoWPAN packets (16-bit link-local, hop limit=64)
+  cfg: *nn
+  ref: RFC 6282 section 3; RFC 6775 5.6
+  pre:
+    - *hc
+    - *e16
+    - *h64
+  seq:
+    - s:
+      - EUT1 initiates an echo request to EUT2's link-local address
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+      - Hop Limit is 64, no traffic class or flow label is being used
+    - c: EUT1 sends a compressed 6LoWPAN packet containing the Echo Request message to EUT2
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - f: In IP_HC, SAC=0, SAM=11; DAC=0; DAM=11
+    - v: EUT2 receives the Echo Request message from EUT1
+    - c: EUT2 sends a compressed 6LoWPAN packet containing the Echo Reply message to EUT1
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - f: In IP_HC, SAC=0, SAM=11; DAC=0; DAM=11
+    - v: EUT1 receives the Echo Reply message from EUT2
+  not:
+    - The feature tests check that best compression is used (but this is not a requirement for interoperability)
+    - *replyhl
+
+  
+
+TD_6LoWPAN_HC_04:
+  obj: Check that EUTs correctly handle compressed 6LoWPAN packets (16-bit link-local, hop limit=63)
+  cfg: *nn
+  ref: RFC 6282 section 3; RFC 6775 5.6
+  pre:
+    - *hc
+    - *e16
+    - *h63
+  seq:
+    - s:
+      - EUT1 initiates an echo request to EUT2's link-local address
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+      - Hop Limit is 63, no traffic class or flow label is being used
+    - c: EUT1 sends a compressed 6LoWPAN packet containing the Echo Request message to EUT2
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl00
+    - f: In IP_HC, SAC=0, SAM=11; DAC=0; DAM=11
+    - v: EUT2 receives the Echo Request message from EUT1
+    - c: EUT2 sends a compressed 6LoWPAN packet containing the Echo Reply message to EUT1
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl00
+    - f: In IP_HC, SAC=0, SAM=11; DAC=0; DAM=11
+    - v: EUT1 receives the Echo Reply message from EUT2
+  not:
+    - The feature tests check that best compression is used (but this is not a requirement for interoperability)
+    - *replyhl
+
+  
+
+  
+TD_6LoWPAN_HC_10:
+  obj: Check that EUTs correctly handle compressed 6LoWPAN packets (16-bit to EUI-64 link-local, hop limit=64)
+  cfg: *nn
+  ref: RFC 6282 section 3; RFC 6775 5.6
+  pre:
+    - *hc
+    - *e1664
+  seq:
+    - s:
+      - EUT1 initiates an echo request to EUT2's link-local address
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+      - Hop Limit is 64, no traffic class or flow label is being used
+    - c: EUT1 sends a compressed 6LoWPAN packet containing the Echo Request message to EUT2
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - f: In IP_HC, SAC=0, SAM=11; DAC=0; DAM=11
+    - v: EUT2 receives the Echo Request message from EUT1
+    - c: EUT2 sends a compressed 6LoWPAN packet containing the Echo Reply message to EUT1
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - f: In IP_HC, SAC=0, SAM=11; DAC=0; DAM=11
+    - v: EUT1 receives the Echo Reply message from EUT2
+  not:
+    - The feature tests check that best compression is used (but this is not a requirement for interoperability)
+    - *replyhl
+
+
+
+
+TD_6LoWPAN_HC_06:
+  obj: Check that EUTs correctly handle compressed UDP packets (16-bit, server port 5683)
+  cfg: *hr
+  ref: RFC 6282, 4.3
+  pre:
+    - *hchr
+    - *host16
+    - *coaping
+  seq:
+    - s:
+      - 6LR initiates a CoAP Ping request to Host's CoAP Ping server
+    - c: 6LR sends a 6LoWPAN packet containing the CoAP Ping message to Host
+    - f: NH is set, NHC is 111100x0, the source port is compressed to 8 bits (x=1) or uncompressed (x=0), the destination port is uncompressed 5683
+    - v: Host receives the CoAP Ping message from 6LR
+    - c: Host sends a 6LoWPAN packet containing the CoAP Reset message to 6LR
+    - f: NH is set, NHC is 1111000x, the source port is uncompressed 5683, the destination port is compressed to 8 bits (x=1) or uncompressed (x=0)
+    - v: 6LR receives the CoAP Reset message from Host
+  not: The feature tests check that best compression is used (but this is not a requirement for interoperability)
+
+  
+
+
+TD_6LoWPAN_HC_08:
+  obj: Check that EUTs correctly handle compressed UDP packets (16-bit, server port 61616)
+  cfg: *hr
+  ref: RFC 6282, 4.3
+  pre:
+    - *hchr
+    - *host16
+    - *coaping6
+  seq:
+    - s:
+      - 6LR initiates a CoAP Ping request to Host's CoAP Ping server
+    - c: 6LR sends a 6LoWPAN packet containing the CoAP Ping message to Host
+    - f: NH is set, NHC is 111100x1, the destination port is compressed to 4 bits of 0000 (x=1) or 8 bits of 0xb0 (x=0)
+    - v: Host receives the CoAP Ping message from 6LR
+    - c: Host sends a 6LoWPAN packet containing the CoAP Reset message to 6LR
+    - f: NH is set, NHC is 1111001x, the source port is compressed to 4 bits of 0000 (x=1) or 8 bits of 0xb0 (x=0)
+    - v: 6LR receives the CoAP Reset message from Host
+  not: The feature tests check that best compression is used (but this is not a requirement for interoperability)
+
+  
+
+TD_6LoWPAN_ND_HC_02:
+  obj: Check that EUTs make use of context 0 (16-bit)
+  cfg: *hr
+  ref: RFC 6775 5.4, RFC 6282 3.1.1
+  pre:
+    - *hc
+    - *e16
+    - *h64
+  seq:
+    - s: Host is set up with 6LR and receives context 0 for the global prefix
+    - s:
+      - EUT1 initiates an echo request to EUT2's GP16 address
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+      - Hop Limit is 64, no traffic class or flow label is being used
+    - c: EUT1 sends a 6LoWPAN packet containing the Echo Request message to EUT2
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - f: The compression makes use of the global prefix (SAC/DAC = 1, SAM/DAM=10/11)
+    - f: The context identifier extension is not present (CID = 0)
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - v: EUT2 receives the Echo Request message from EUT1
+    - c: EUT2 sends a compressed 6LoWPAN packet containing the Echo Reply message to EUT1
+    - f: *hl10
+    - f: The compression makes use of the global prefix (SAC/DAC = 1, SAM/DAM=10/11)
+    - f: The context identifier extension is not present (CID = 0)
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+  not:
+    - The feature tests check that good compression is used (but this is not a requirement for interoperability)
+    - *replyhl
+
+TD_6LoWPAN_ND_HC_04:
+  obj: Check that EUTs make use of context ≠ 0 (16-bit)
+  cfg: *hr
+  ref: RFC 6775 5.4, RFC 6282 3.1.2
+  pre:
+    - *hc
+    - *e16
+    - *h64
+  seq:
+    - s: Host is set up with 6LR and receives context ≠ 0 for the global prefix
+    - s:
+      - EUT1 initiates an echo request to EUT2's GP16 address
+      - ICMP payload = 4 bytes, total IPv6 size 52 bytes
+      - Hop Limit is 64, no traffic class or flow label is being used
+    - c: EUT1 sends a 6LoWPAN packet containing the Echo Request message to EUT2
+    - f: In IP_HC, TF is 11 and the ecn, dscp and flow label fields are compressed away
+    - f: *hl10
+    - f: The compression makes use of the global prefix (SAC/DAC = 1, SAM/DAM=10/11)
+    - c: A Context Identifier Extension (CID) is used for this
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+    - v: EUT2 receives the Echo Request message from EUT1
+    - c: EUT2 sends a compressed 6LoWPAN packet containing the Echo Reply message to EUT1
+    - f: *hl10
+    - f: The compression makes use of the global prefix (SAC/DAC = 1, SAM/DAM=10/11)
+    - c: A Context Identifier Extension (CID) is used for this
+    - c: Dispatch value in 6LowPAN packet is “011TFxHL”
+  not:
+    - The feature tests check that good compression is used (but this is not a requirement for interoperability)
+    - *replyhl
+
+
+
+
+
+TD_6LoWPAN_FORMAT_03:
+  obj: Check that EUTs correctly handle uncompressed 6LoWPAN fragmented packets
+  cfg: *nn
+  ref: RFC 4944 5.1, 5.3; RFC 6775 5.6
+  pre:
+    -   *nohc
+  seq:
+    - s:
+      - EUT1 initiates an echo request to EUT2's link-local address
+      - ICMP payload = 253 bytes, total IPv6 size 301 bytes
+    - c:
+      - EUT1 sends a sequence of uncompressed 6LoWPAN packets containing the Echo Request fragments to EUT2
+      - "EUT1 correctly fragments the Echo Request:"
+      - a 6LoWPAN FRAG1 header (dispatch 11000xxx) is included in the first packet
+      - a 6LoWPAN FRAGN header (dispatch 11100xxx) is included in all following packets
+      - the offsets form a contiguous sequence
+      - all fragments except the last one must be multiples of 8 bytes
+    - v: EUT2 reassembles correctly the fragments and receives the Echo Request message from EUT1
+    - c:
+      - EUT2 sends a sequence of uncompressed 6LoWPAN packets containing the Echo Reply message to EUT1
+      - "EUT1 correctly fragments the Echo Reply:"
+      - a 6LoWPAN FRAG1 header (dispatch 11000xxx) is included in the first packet
+      - a 6LoWPAN FRAGN header (dispatch 11100xxx) is included in all following packets
+      - the offsets form a contiguous sequence
+      - all fragments except the last one must be multiples of 8 bytes
+      - The data in the echo reply message packets is identical to that sent in the echo request message packets
+    - v: EUT1 correctly reassembles the fragments and receives the Echo Reply message from EUT2
+    - v: The data in the received echo reply message is identical to that sent in the echo request message
+
+
+
+TD_6LoWPAN_FORMAT_04:
+  obj: Check that EUTs correctly handle maximum size uncompressed 6LoWPAN fragmented packets
+  cfg: *nn
+  ref: RFC 4944 5.1, 5.3; RFC 6775 5.6
+  pre:
+    -   *nohc
+  seq:
+    - s:
+      - EUT1 initiates an echo request to EUT2's link-local address
+      - ICMP payload = 1232 bytes, total IPv6 size 1280 bytes
+    - c:
+      - EUT1 sends a sequence of uncompressed 6LoWPAN packets containing the Echo Request fragments to EUT2
+      - "EUT1 correctly fragments the Echo Request:"
+      - a 6LoWPAN FRAG1 header (dispatch 11000xxx) is included in the first packet
+      - a 6LoWPAN FRAGN header (dispatch 11100xxx) is included in all following packets
+      - the offsets form a contiguous sequence
+      - all fragments except the last one must be multiples of 8 bytes
+    - v: EUT2 reassembles correctly the fragments and receives the Echo Request message from EUT1
+    - c:
+      - EUT2 sends a sequence of uncompressed 6LoWPAN packets containing the Echo Reply message to EUT1
+      - "EUT1 correctly fragments the Echo Reply:"
+      - a 6LoWPAN FRAG1 header (dispatch 11000xxx) is included in the first packet
+      - a 6LoWPAN FRAGN header (dispatch 11100xxx) is included in all following packets
+      - the offsets form a contiguous sequence
+      - all fragments except the last one must be multiples of 8 bytes
+      - The data in the echo reply message packets is identical to that sent in the echo request message packets
+    - v: EUT1 correctly reassembles the fragments and receives the Echo Reply message from EUT2
+    - v: The data in the received echo reply message is identical to that sent in the echo request message
+
+
+
+
+TD_6LoWPAN_ND_03:
+  obj: Check Host NUD behavior
+  cfg: *hr
+  ref: RFC 6775 5.5
+  pre:
+    - *hchr
+    - *host64
+    - *registered
+  seq:
+    - s: Host sends a sequence of echo requests to 2001:db8::1
+    - v: Host sends a unicast NS message to the 6LR to perform NUD
+
+TD_6LoWPAN_ND_04:
+  obj: Check 6LR NUD behavior (ICMP version)
+  cfg: *hr
+  ref: RFC 6775 5.5
+  pre:
+    - *hchr
+    - *host64
+    - *registered
+  seq:
+    - s: 6LR sends a sequence of echo requests to Host
+    - s: After 10 seconds, echo reply function is disabled on host
+    - v: 6LR sends a unicast NS message to the host to perform NUD
+  not: Optional, as not all hosts allow disabling echo reply function
+
+TD_6LoWPAN_ND_05:
+  obj: Check 6LR NUD behavior (UDP version)
+  cfg: *hr
+  ref: RFC 6775 5.5
+  pre:
+    - *hchr
+    - *host64
+    - *coaping
+    - *registered
+  seq:
+    - s: 6LR sends a sequence of CoAP pings to Host
+    - s: After 10 seconds, CoAP server function is disabled on host
+    - v: 6LR sends a unicast NS message to the host to perform NUD
+  not: Optional, as not all hosts allow disabling CoAP server function
