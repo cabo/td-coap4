@@ -609,7 +609,7 @@ TD_COAP_OBS_08:
   - c:
     - 'Server sends notification containing:'
     - - Type = 0 (CON)
-      - Code = 5.00 (Internal Server Error)
+      - Code = 4.06 (Not Acceptable)
       - *TOKVAL2
       - *NOOBS
   - v: Server does not send further notifications
