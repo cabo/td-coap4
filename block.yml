@@ -635,7 +635,7 @@ TD_COAP_OBS_09:
   - c: Client sends an ACK
   - s: Update the /obs resource of the server’s resource with a new payload having
       the same Content-Format (either locally or by having another CoAP client perform
-      a DELETE request)
+      a PUT request)
   - c:
     - 'Server notifications contains:'
     - - Type = 0 (CON)
