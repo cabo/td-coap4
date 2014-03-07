@@ -271,6 +271,7 @@ TD_COAP_CORE_09:
       - Code = 1 (GET)
       - *CMID
       - *USEP
+      - *CTOK
   - *ACK0S
   - n: Some time (a couple of seconds) elapses.
   - c:
