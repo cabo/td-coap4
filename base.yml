@@ -1,5 +1,9 @@
 ---
 strings:
+  - &UTEST Uri-Path option "test"
+  - &USEP Uri-Path option "separate"
+  - &UQUERY Uri-Path option "query"
+  - &UVAL Uri-Path option "validate"
   - &CMID Client-generated Message ID (➔ CMID)
   - &CMID2 Another client-generated Message ID ≠ CMID (➔ CMID2)
   - &CMID3 Another client-generated Message ID ≠ CMID and ≠ CMID2 (➔ CMID3)
@@ -63,6 +67,7 @@ TD_COAP_CORE_01:
     - - Type=0 and Code=1
       - *CMID
       - *CTOK
+      - *UTEST
   - c:
     - 'Server sends response containing:'
     - - Code = 2.05 (Content)
@@ -85,6 +90,7 @@ TD_COAP_CORE_02:
     - - Type=0 and Code=4
       - *CMID
       - *CTOK
+      - *UTEST
   - c:
     - 'Server sends response containing:'
     - - Code = 2.02 (Deleted)
@@ -110,6 +116,7 @@ TD_COAP_CORE_03:
     - - Type=0 and Code=3
       - *CMID
       - *CTOK
+      - *UTEST
   - v: Server displays received information
   - c:
     - 'Server sends response containing:'
@@ -135,6 +142,7 @@ TD_COAP_CORE_04:
     - - Type=0 and Code=2
       - *CMID
       - *CTOK
+      - *UTEST
   - v: Server displays received information
   - c:
     - 'Server sends response containing:'
@@ -159,6 +167,7 @@ TD_COAP_CORE_05:
     - - Type=1 and Code=1
       - *CMID
       - *CTOK
+      - *UTEST
   - c:
     - 'Server sends response containing:'
     - - Type = 1 (NON)
@@ -182,6 +191,7 @@ TD_COAP_CORE_06:
     - - Type=1 and Code=4
       - *CMID
       - *CTOK
+      - *UTEST
   - c:
     - 'Server sends response containing:'
     - - Type = 1 (NON)
@@ -208,6 +218,7 @@ TD_COAP_CORE_07:
     - - Type=1 and Code=3
       - *CMID
       - *CTOK
+      - *UTEST
   - v: Server displays the received information
   - c:
     - 'Server sends response containing:'
@@ -235,6 +246,7 @@ TD_COAP_CORE_08:
     - - Type=1 and Code=2
       - *CMID
       - *CTOK
+      - *UTEST
   - v: Server displays the received information
   - c:
     - 'Server sends response containing:'
@@ -258,6 +270,7 @@ TD_COAP_CORE_09:
     - - Type = 0 (CON)
       - Code = 1 (GET)
       - *CMID
+      - *USEP
   - *ACK0S
   - n: Some time (a couple of seconds) elapses.
   - c:
@@ -287,6 +300,7 @@ TD_COAP_CORE_10:
       - *CMID
       - *CTOK
       - Length of the token should be between 1 to 8 Bytes
+      - *UTEST
   - *S205
   - v: Client displays the response
 TD_COAP_CORE_11:
@@ -305,6 +319,7 @@ TD_COAP_CORE_11:
       - *CMID
       - *CTOK
       - Length of the token should be between 1 to 8 Bytes
+      - *USEP
   - *ACK0S
   - n: Some time (a couple of seconds) elapses.
   - c:
@@ -329,6 +344,7 @@ TD_COAP_CORE_12:
     - - Type = 0 (CON)
       - Code = 1 (GET)
       - Zero-Length Token ➔ CTOK
+      - *UTEST
   - *S205
   - v: Client displays the response
   not: Not all clients may be able to send a zero-length Token
@@ -345,6 +361,7 @@ TD_COAP_CORE_13:
       - Code = 1 (GET)
       - *CMID
       - *CTOK
+      - *UTEST
     - 'and three options of type Uri-Path, with the values:'
     - - seg1
       - seg2
@@ -365,6 +382,7 @@ TD_COAP_CORE_14:
       - Code = 1 (GET)
       - *CMID
       - *CTOK
+      - *UQUERY
     - 'and two options of Uri-Query, with values such as:'
     - - first=1
       - second=2
@@ -386,6 +404,7 @@ TD_COAP_CORE_15:
       - Code = 1
       - *CMID
       - *CTOK
+      - *UTEST
   - *S205
   - v: Client displays the response
   - c:
@@ -409,6 +428,7 @@ TD_COAP_CORE_16:
     - - Type = 0
       - Code = 1
       - *CMID
+      - *USEP
   - *ACK0S
   - c:
     - 'Server sends response containing:'
@@ -443,6 +463,7 @@ TD_COAP_CORE_17:
     - - Type = 1 (NON)
       - Code = 1 (GET)
       - *CMID
+      - *USEP
   - c:
     - 'Server DOES NOT send response containing:'
     - - Type = 2 (ACK)
@@ -472,6 +493,7 @@ TD_COAP_CORE_18:
       - Code = 2 (POST)
       - An arbitrary payload
       - Content-format option
+      - *UTEST
   - c:
     - 'Server sends response containing:'
     - - Code = 2.01 (Created)
@@ -497,6 +519,7 @@ TD_COAP_CORE_19:
       - *CTOK
       - *CFO
       - *ONEP
+      - Uri-Path option "location-query"
   - c:
     - 'Server sends response containing:'
     - - Code = 2.01 (Created)
@@ -526,6 +549,7 @@ TD_COAP_CORE_20:
       - *CMID
       - *CTOK
       - 'Option type = Accept, value = 0 (text/plain;charset=utf-8)'
+      - Uri-Path option "multi-format"
   - c:
     - 'Server sends response containing:'
     - - Code = 2.05 (Content)
@@ -566,6 +590,7 @@ TD_COAP_CORE_21:
       - Code = 1 (GET)
       - *CMID
       - *CTOK
+      - *UVAL
       - No ETag option
   - c:
     - 'Server sends response containing:'
@@ -583,6 +608,7 @@ TD_COAP_CORE_21:
       - Code = 1 (GET)
       - *CMID2
       - *CTOK2
+      - *UVAL
       - Option Type = ETag, value = ETAG1 (the ETag value received in step 3)
   - c:
     - 'Server sends response containing:'
@@ -601,6 +627,7 @@ TD_COAP_CORE_21:
       - Code = 1 (GET)
       - *CMID3
       - *CTOK3
+      - *UVAL
       - Option Type = ETag, value = ETAG1 (the ETag value received in step 3)
   - c:
     - 'Server sends response containing:'
@@ -628,6 +655,7 @@ TD_COAP_CORE_22:
       - Code = 1 (GET)
       - *CMID
       - *CTOK
+      - *UVAL
       - No ETag option
   - c:
     - 'Server sends response containing:'
@@ -644,6 +672,7 @@ TD_COAP_CORE_22:
       - Code = 3 (PUT)
       - *CMID2
       - *CTOK2
+      - *UVAL
       - Option type = If-Match, value = ETAG1 (ETag value received in step 3)
       - An arbitrary payload (which differs from the payload received in step 3)
   - c:
@@ -661,6 +690,7 @@ TD_COAP_CORE_22:
       - Code = 1 (GET)
       - *CMID3
       - *CTOK3
+      - *UVAL
   - c:
     - 'Server sends response containing:'
     - - Code = 2.05 (Content)
@@ -675,6 +705,7 @@ TD_COAP_CORE_22:
       - Code = 3 (PUT)
       - *CMID4
       - *CTOK4
+      - *UVAL
       - An arbitrary payload (which differs from the payloads received in steps 3 and 10)
   - c:
     - 'Server sends response containing:'
@@ -691,6 +722,7 @@ TD_COAP_CORE_22:
       - Code = 3 (PUT)
       - *CMID4
       - *CTOK4
+      - *UVAL
       - Option type = If-Match, value = ETAG2 (ETag value received in step 10)
       - An arbitrary payload (which differs from the previous payloads)
   - c:
@@ -718,6 +750,7 @@ TD_COAP_CORE_23:
       - Code = 3 (PUT)
       - *CMID
       - *CTOK
+      - Uri-Path option "create1"
       - Option Type=If-None-Match
       - An arbitrary payload
   - c:
@@ -736,6 +769,7 @@ TD_COAP_CORE_23:
       - Code = 3 (PUT)
       - *CMID2
       - *CTOK2
+      - Uri-Path option "create1"
       - Option Type=If-None-Match
       - An arbitrary payload
   - c:
