@@ -735,3 +735,41 @@ TD_COAP_OBS_11:
   - v: Client displays the received information
   - c: Check that, even if the delivery of notifications takes some time due to retransmissions, there are never multiple notifications active at one time.
   not: Steps 4-6 are in a loop.
+
+TD_COAP_OBS_12:
+  obj: "GET with Observe=1 does cancel resource observation"
+  cfg: CoAP_CFG_BASIC
+  ref:
+    - *OBS_BASIC
+    - IETF 89 WG decision on observation cancellation
+  pre:
+  - Client supports Observe option
+  - Server supports Observe option
+  - *OBS_CON
+  seq:
+  - s: *REQ_GET_OBS
+  - c: *REQ_GET_OBS2
+  - c: *REQ_GET_OBS3
+  - n: "After some time elapses, repeatedly:"
+  - c: *REQ_GET_OBS4
+  - c: Client sends an ACK
+  - v: Client displays the received information
+  - n: "Perform canceling GET"
+  - s: 'Client is requested to send to the server a confirmable GET request with observe option = 1 and token = 1 for resource /obs'
+  - c:
+    - 'The request sent by client contains:'
+    - - Type = 0 (CON)
+      - Code = 1 (GET)
+      - Token value t
+      - "Observe option = 1"
+  - c:
+    - 'Server sends the response containing:'
+    - - Type = 2 (ACK)
+      - *CONTENT
+      - Content-format of the resource /obs, = f
+      - Token value = t, same as one found in the step 8
+      - *DEFNOOBS
+  - n: "After some time elapses, no further notifications arrive."
+  - v: Server does not send further notifications
+  - v: Client does not display further received information
+  not: Steps 4-6 are in a loop.
