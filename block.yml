@@ -773,3 +773,98 @@ TD_COAP_OBS_12:
   - v: Server does not send further notifications
   - v: Client does not display further received information
   not: Steps 4-6 are in a loop.
+
+TD_COAP_OBS_13:
+  obj: Handle observation of large resources (with Block2)
+  cfg: CoAP_CFG_BASIC
+  ref:
+    - *OBS_BASIC
+    - "[BLOCK] 2.6"
+  pre:
+  - Client supports Observe and Block2 options
+  - Server supports Observe and Block2 options
+  - &OBS_CON Server offers an observable resource /obs-large which changes periodically (e.g. every
+    5s) which produces confirmable notifications
+  seq:
+  - s: 'Client is requested to send to the server a confirmable GET request with observe option for resource /obs-large '
+  - c: *REQ_GET_OBS2
+  - c:
+    - 'Server sends the response containing:'
+    - - Type = 2 (ACK)
+      - *CONTENT
+      - Content-format of the resource /obs, ➔ f
+      - *TOKVAL2
+      - Observe option with a sequence number
+      - Block2 option with
+      - - NUM = 0;
+        - M = 1;
+        - *DES
+      - *FULL
+  - c: &GETREST Client obtains the rest of the resource representation (cf. TD_COAP_BLOCK_02)
+  - n: "After some time elapses, repeatedly:"
+  - c:
+    - 'Server sends a notification containing:'
+    - - Type = 0 (CON)
+      - *CONTENT
+      - &CF3 Content-format = f, same as one found in the step 3
+      - Token value = t, same as one found in the step 3
+      - &OBSINCR Observe option indicating increasing values (sequence
+        number arithmetic modulo 2**24), unless more than 256 seconds
+        elapsed
+      - Block2 option with
+      - - NUM = 0;
+        - M = 1;
+        - *DES
+      - *FULL
+  - c: Client sends an ACK
+  - c: *GETREST
+  - v: Client displays the received information
+  not: Steps 5-8 are in a loop.
+
+
+TD_COAP_OBS_14:
+  obj: Handle observation of variable size large resources (with Block2)
+  cfg: CoAP_CFG_BASIC
+  ref:
+    - *OBS_BASIC
+    - "[BLOCK] 2.6"
+  pre:
+  - Client supports Observe and Block2 options
+  - Server supports Observe and Block2 options
+  - &OBS_CON Server offers an observable resource /obs-pumping which changes periodically (e.g. every
+    5s), with varying sizes some of which require a Block2 option and others that do not, which produces confirmable notifications
+  seq:
+  - s: 'Client is requested to send to the server a confirmable GET request with observe option for resource /obs-pumping '
+  - c: *REQ_GET_OBS2
+  - c:
+    - 'Server sends the response containing:'
+    - - Type = 2 (ACK)
+      - *CONTENT
+      - Content-format of the resource /obs, ➔ f
+      - *TOKVAL2
+      - Observe option with a sequence number
+      - Potentially, a Block2 option with
+      - - NUM = 0;
+        - M = 1;
+        - *DES
+      - &FULLIFBL2 If there was a Block2 option, Payload size is 2**(SZX+4) bytes.
+  - c: &IFBL2 If there was a Block2 option, the client obtains the rest of the resource representation (cf. TD_COAP_BLOCK_02)
+  - n: "After some time elapses, repeatedly:"
+  - c:
+    - 'Server sends a notification containing:'
+    - - Type = 0 (CON)
+      - *CONTENT
+      - &CF3 Content-format = f, same as one found in the step 3
+      - Token value = t, same as one found in the step 3
+      - &OBSINCR Observe option indicating increasing values (sequence
+        number arithmetic modulo 2**24), unless more than 256 seconds
+        elapsed
+      - Block2 option with
+      - - NUM = 0;
+        - M = 1;
+        - *DES
+      - *FULLIFBL2
+  - c: Client sends an ACK
+  - c: *IFBL2
+  - v: Client displays the received information
+  not: Steps 5-8 are in a loop.
