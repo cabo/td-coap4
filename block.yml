@@ -123,9 +123,9 @@ TD_COAP_BLOCK_03:
       - *DES
     - *FULL
   - c:
-    - 'Server sends 2.04 (Changed) response with a Block1 option indicating:'
+    - &B1R 'Server sends 2.04 (Changed) or 2.31 (Continue) response with a Block1 option indicating:'
     - - NUM = 0;
-      - M = 0 (stateless) or 1 (atomic);
+      - &MBITC M = 0 (stateless, for 2.04) or 1 (atomic, for 2.31);
       - *ACT_LESS
   - n: Start of loop
   - c:
@@ -138,9 +138,9 @@ TD_COAP_BLOCK_03:
       - *ACT
     - *FULL
   - c:
-    - 'Server sends 2.04 (Changed) response containing Block1 option indicating:'
+    - *B1R
     - - NUM = i where “i” is the block number used at step 4;
-      - M = 0 (stateless) or 1 (atomic);
+      - *MBITC
       - *ACT
   - n: 'end of loop; final slice:'
   - c:

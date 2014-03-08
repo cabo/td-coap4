@@ -470,8 +470,8 @@
           Check
         </td>
         <td>
-          Server sends 2.04 (Changed) response with a Block1 option indicating:<ul><li>NUM = 0;</li>
-          <li>M = 0 (stateless) or 1 (atomic);</li>
+          Server sends 2.04 (Changed) or 2.31 (Continue) response with a Block1 option indicating:<ul><li>NUM = 0;</li>
+          <li>M = 0 (stateless, for 2.04) or 1 (atomic, for 2.31);</li>
           <li>SZX (➔ACT_SZX) is less than or equal to DES_SZX.</li>
           </ul>
         </td>
@@ -505,8 +505,8 @@
           Check
         </td>
         <td>
-          Server sends 2.04 (Changed) response containing Block1 option indicating:<ul><li>NUM = i where “i” is the block number used at step 4;</li>
-          <li>M = 0 (stateless) or 1 (atomic);</li>
+          Server sends 2.04 (Changed) or 2.31 (Continue) response with a Block1 option indicating:<ul><li>NUM = i where “i” is the block number used at step 4;</li>
+          <li>M = 0 (stateless, for 2.04) or 1 (atomic, for 2.31);</li>
           <li>SZX is ACT_SZX.</li>
           </ul>
         </td>
