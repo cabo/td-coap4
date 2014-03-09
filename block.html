@@ -3665,7 +3665,7 @@
           <li>Content-format = f, same as one found in the step 3</li>
           <li>Token value = t, same as one found in the step 3</li>
           <li>Observe option indicating increasing values (sequence number arithmetic modulo 2**24), unless more than 256 seconds elapsed</li>
-          <li>Block2 option with</li>
+          <li>Potentially, a Block2 option with</li>
           <li><ul><li>NUM = 0;</li>
           <li>M = 1;</li>
           <li>SZX (➔DES_SZX) is the desired block size.</li>
@@ -3714,7 +3714,10 @@
         Notes:
       </th>
       <td colspan='3'>
-        Steps 5-8 are in a loop.
+        <ul><li>Steps 5-8 are in a loop.</li>
+        <li>continue observing until both the Block2 and the single-payload case (no blockwise transfer) have been observed.</li>
+        <li>repeat test until the response to the initial request also has been observed both in Block2 and in single-payload form.</li>
+        </ul>
       </td>
     </table>
   </body>

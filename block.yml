@@ -859,7 +859,7 @@ TD_COAP_OBS_14:
       - &OBSINCR Observe option indicating increasing values (sequence
         number arithmetic modulo 2**24), unless more than 256 seconds
         elapsed
-      - Block2 option with
+      - Potentially, a Block2 option with
       - - NUM = 0;
         - M = 1;
         - *DES
@@ -867,4 +867,7 @@ TD_COAP_OBS_14:
   - c: Client sends an ACK
   - c: *IFBL2
   - v: Client displays the received information
-  not: Steps 5-8 are in a loop.
+  not:
+  - Steps 5-8 are in a loop.
+  - continue observing until both the Block2 and the single-payload case (no blockwise transfer) have been observed.
+  - repeat test until the response to the initial request also has been observed both in Block2 and in single-payload form.
