@@ -717,7 +717,7 @@
           Server sends 2.01 (Created) response containing Block1 option indicating:<ul><li>NUM = n where “n” is the block number used at step 6;</li>
           <li>M = 0 (final);</li>
           <li>SZX is ACT_SZX.</li>
-          </ul>and two Location-Path options<ul><li>First option value must contain “large-create”</li>
+          </ul>and Location-Path options, e.g. if the new location is &quot;/large-create/PS&quot;:<ul><li>First option value must contain “large-create”</li>
           <li>Second option value is a (single) path segment chosen by the server (PS)</li>
           <li>none of the Location-Path options contain a ‘/’</li>
           </ul>
@@ -744,7 +744,7 @@
           Verify
         </td>
         <td>
-          Server indicates presence of the complete new resource /large-create/PS
+          Server indicates presence of the complete new resource, e.g., /large-create/PS
         </td>
       </tr>
       <tr>
@@ -761,7 +761,7 @@
           Check
         </td>
         <td>
-          Client sends GET request to /large-create/PS (i.e., using Uri-Path options simpley copied from the Location-Path of step 7)
+          Client sends GET request to new location (e.g., &quot;/large-create/PS&quot;, i.e., using Uri-Path options simply copied from the Location-Path of step 7)
         </td>
       </tr>
       <tr>

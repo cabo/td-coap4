@@ -206,14 +206,14 @@ TD_COAP_BLOCK_04:
     - - NUM = n where “n” is the block number used at step 6;
       - M = 0 (final);
       - *ACT
-    - and two Location-Path options
+    - 'and Location-Path options, e.g. if the new location is "/large-create/PS":'
     - - First option value must contain “large-create”
       - Second option value is a (single) path segment chosen by the server (PS)
       - none of the Location-Path options contain a ‘/’
   - v: Client displays the response
-  - v: Server indicates presence of the complete new resource /large-create/PS
+  - v: Server indicates presence of the complete new resource, e.g., /large-create/PS
   - n: 'verify resource creation (optional):'
-  - c: Client sends GET request to /large-create/PS (i.e., using Uri-Path options simpley copied from the Location-Path of step 7)
+  - c: Client sends GET request to new location (e.g., "/large-create/PS", i.e., using Uri-Path options simply copied from the Location-Path of step 7)
   - c: Server sends 2.05 (Content) response with representation of created resource, potentially making use of the Block2 protocol
   - v: Client indicates the value of the newly created resource
   not: Steps 4 and 5 are in a loop.
