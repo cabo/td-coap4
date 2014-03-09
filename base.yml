@@ -619,7 +619,7 @@ TD_COAP_CORE_21:
       - *EP
   - v: 'Client displays the response '
   - n: Verifying that client cache entry is no longer valid
-  - s: Update the content of the server’s resource from a CoAP client
+  - s: Update the content of the server’s resource from a CoAP client (either another client, or the testing client in a separate transaction)
   - s: Client is requested to send a confirmable GET request to server’s resource
       so as to check if the resource was updated
   - c:
