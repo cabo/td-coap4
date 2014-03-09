@@ -493,7 +493,7 @@ TD_COAP_CORE_18:
     - - Type = 0 (CON
       - Code = 2 (POST)
       - An arbitrary payload
-      - Content-format option
+      - *CFO
       - *UTEST
   - c:
     - 'Server sends response containing:'
@@ -673,6 +673,7 @@ TD_COAP_CORE_22:
       - Code = 3 (PUT)
       - *CMID2
       - *CTOK2
+      - *CFO
       - *UVAL
       - Option type = If-Match, value = ETAG1 (ETag value received in step 3)
       - An arbitrary payload (which differs from the payload received in step 3)
@@ -706,6 +707,7 @@ TD_COAP_CORE_22:
       - Code = 3 (PUT)
       - *CMID4
       - *CTOK4
+      - *CFO
       - *UVAL
       - An arbitrary payload (which differs from the payloads received in steps 3 and 10)
   - c:
@@ -723,6 +725,7 @@ TD_COAP_CORE_22:
       - Code = 3 (PUT)
       - *CMID4
       - *CTOK4
+      - *CFO
       - *UVAL
       - Option type = If-Match, value = ETAG2 (ETag value received in step 10)
       - An arbitrary payload (which differs from the previous payloads)
@@ -751,6 +754,7 @@ TD_COAP_CORE_23:
       - Code = 3 (PUT)
       - *CMID
       - *CTOK
+      - *CFO
       - Uri-Path option "create1"
       - Option Type=If-None-Match
       - An arbitrary payload
@@ -770,6 +774,7 @@ TD_COAP_CORE_23:
       - Code = 3 (PUT)
       - *CMID2
       - *CTOK2
+      - *CFO
       - Uri-Path option "create1"
       - Option Type=If-None-Match
       - An arbitrary payload
