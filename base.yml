@@ -384,9 +384,10 @@ TD_COAP_CORE_14:
       - *CMID
       - *CTOK
       - *UQUERY
-    - 'and two options of Uri-Query, with values such as:'
+    - 'and three options of Uri-Query, with values such as:'
     - - first=1
       - second=2
+      - third=3
   - *S205
   - v: Client displays the response
 TD_COAP_CORE_15:
